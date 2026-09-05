@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Antennas -->
+    <path
+        android:fillColor="@color/volla_red"
+        android:pathData="M9,2L7,5M15,2L17,5"
+        android:strokeWidth="1"
+        android:strokeColor="@color/volla_red"
+        android:strokeLineCap="round"/>
+    <!-- Head/Body -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4Z" />
+    <!-- Eyes -->
+    <path
+        android:fillColor="@color/volla_red"
+        android:pathData="M8,11a1.5,1.5 0 1,0 3,0a1.5,1.5 0 1,0 -3,0M13,11a1.5,1.5 0 1,0 3,0a1.5,1.5 0 1,0 -3,0" />
+    <!-- Smile -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M9,15c1,1.5 5,1.5 6,0"
+        android:strokeWidth="1.2"
+        android:strokeColor="#424242"
+        android:strokeLineCap="round"/>
+</vector>

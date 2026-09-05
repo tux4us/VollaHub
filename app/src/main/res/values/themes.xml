@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.VollaHub" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Hell-Theme (Light) -->
+        <item name="colorPrimary">#730D0D</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#FFDAD6</item>
+        <item name="colorOnPrimaryContainer">#410002</item>
+        <item name="colorSecondary">#775652</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSurface">#FFF8F6</item>
+        <item name="colorOnSurface">#231918</item>
+        <item name="colorOutline">#857371</item>
+
+        <item name="android:statusBarColor">@color/volla_red</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
+
+        <!-- Toolbar Icon Fix -->
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="Theme.VollaHub.Translucent" parent="Theme.VollaHub">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+</resources>

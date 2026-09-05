@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trage die WebDAV-Zugangsdaten ein, über die dein Standort geteilt wird. Alle Geräte, die dieselben Zugangsdaten verwenden, sehen sich gegenseitig auf der Karte."
+        android:textSize="13sp"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Server-URL (z.B. https://mein.server.de/webdav)"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="12dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etWebDavUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Benutzername"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="12dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etWebDavUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Passwort"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="24dp"
+        app:endIconMode="password_toggle">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etWebDavPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Routing (Optional)"
+        android:textAppearance="?attr/textAppearanceTitleSmall"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="OpenRouteService API Key"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="16dp"
+        app:helperText="Wird für die Routenberechnung benötigt.">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etOrsKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTestWebDav"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verbindung testen"
+        app:icon="@android:drawable/ic_menu_send" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnClearWebDav"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zugangsdaten löschen"
+        android:textColor="#F44336"
+        app:icon="@android:drawable/ic_menu_delete"
+        app:iconTint="#F44336" />
+
+    <TextView
+        android:id="@+id/tvTestResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+</LinearLayout>

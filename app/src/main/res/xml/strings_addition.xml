@@ -1,0 +1,7 @@
+<!--
+  In res/values/strings.xml ergänzen:
+-->
+<string name="accessibility_service_description">
+    Ermöglicht automatisches Scrollen für lange Screenshots in VollaHub.
+    Dieser Dienst führt nur Scroll-Gesten aus wenn ein langer Screenshot aktiv aufgenommen wird.
+</string>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Volla Hub</string>
+    <string name="search">Suchen</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="error_loading">Fehler beim Laden: %s</string>
+    <string name="no_articles">Keine Artikel gefunden</string>
+    <string name="btn_report_support">Gerätereport - Supportanfrage</string>
+    <string name="btn_youtube">YouTube</string>
+    <string name="btn_github">GitHub</string>
+    <string name="btn_screenshot">Long Screenshot</string>
+    <string name="btn_simple_screenshot">Einfacher Screenshot</string>
+    <string name="nav_social">Soziale Netzwerke</string>
+    <string name="nav_chat">HelpBot</string>
+    <string name="chat_welcome">Hallo! Ich bin der Volla HelpBot. Wie kann ich dir heute helfen?</string>
+    <string name="chat_hint">Frage stellen…</string>
+    <string name="chat_no_results">Entschuldigung, dazu konnte ich in den deutschen Artikeln im Wiki und Forum leider nichts finden. Hast du es schon mit anderen Schlagworten versucht?</string>
+    <string name="chat_results_found">Ich habe folgende Informationen in den deutschen Quellen für dich gefunden:</string>
+    <string name="chat_searching">Ich schaue mal kurz im Wiki und Forum nach…</string>
+    <string name="chat_error">Oje, bei der Suche ist etwas schiefgelaufen. Bitte versuche es gleich nochmal.</string>
+    <string name="social_telegram">VollaCommunity auf Telegram</string>
+    <string name="social_x">Volla auf X</string>
+    <string name="social_facebook">Volla auf Facebook</string>
+    <string name="social_instagram">Volla auf Instagram</string>
+    <string name="social_mastodon">Volla auf Mastodon</string>
+</resources>

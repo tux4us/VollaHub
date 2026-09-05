@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.VollaHub" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Echtes Dark-Theme (Black) -->
+        <item name="colorPrimary">#FFFFFF</item> <!-- Weiße Schriften/Icons statt Rosa -->
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#730D0D</item>
+        <item name="colorOnPrimaryContainer">#FFFFFF</item>
+        <item name="colorSecondary">#E7BDB8</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSurface">#000000</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="colorOutline">#FFFFFF</item>
+        <item name="colorSurfaceVariant">#121212</item>
+        <item name="colorOnSurfaceVariant">#FFFFFF</item>
+
+        <item name="android:statusBarColor">#730D0D</item>
+        <item name="android:windowBackground">#000000</item>
+
+        <!-- Material 3 Card Fixes für Dark Mode -->
+        <item name="cardBackgroundColor">#121212</item>
+
+        <!-- Toolbar & Menu Fix -->
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+    </style>
+</resources>
