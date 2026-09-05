@@ -18,6 +18,7 @@ Volla Hub ist eine umfassende Android-App, die Zugriff auf alle wichtigen Volla-
 - 💬 **Volla Forum** - Direktzugriff auf Unterforen in verschiedenen Sprachen
 - 🔍 **Geräte-Report** - Hardware/Software Spezifikationen auslesen und als PDF exportieren
 - 📱 **Social Media** - Direkte Verknüpfung zur Volla Community (Telegram, Mastodon, etc.)
+- 💾 **Speicherbelegung** - Analysetool für die Speicherbelegung
 
 ## ✨ Features
 
