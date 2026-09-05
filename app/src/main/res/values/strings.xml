@@ -10,6 +10,12 @@
     <string name="btn_github">GitHub</string>
     <string name="btn_screenshot">Long Screenshot</string>
     <string name="btn_simple_screenshot">Einfacher Screenshot</string>
+    <string name="btn_storage_analysis">Speicherbelegung</string>
+    <string name="storage_permission_title">Speicherzugriff erforderlich</string>
+    <string name="storage_permission_desc">Um den Speicher detailliert analysieren zu können, benötigt die App Zugriff auf alle Dateien.</string>
+    <string name="btn_grant_permission">Berechtigung erteilen</string>
+    <string name="btn_up_one_level">Ebene nach oben</string>
+    <string name="btn_rescan">Neu scannen</string>
     <string name="nav_social">Soziale Netzwerke</string>
     <string name="nav_chat">HelpBot</string>
     <string name="chat_welcome">Hallo! Ich bin der Volla HelpBot. Wie kann ich dir heute helfen?</string>

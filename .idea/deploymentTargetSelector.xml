@@ -37,10 +37,10 @@
       </SelectionState>
       <SelectionState runConfigName="unitTest">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-23T11:40:26.412724535Z">
+        <DropdownSelection timestamp="2026-09-05T13:19:36.212050458Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=T1220241100264" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=GS5CTP205163" />
             </handle>
           </Target>
         </DropdownSelection>

@@ -434,6 +434,36 @@
                             android:textAppearance="?attr/textAppearanceLabelLarge"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <!-- Storage Analysis -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnNavStorageAnalysis"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@android:drawable/ic_menu_save"
+                            app:tint="?attr/colorPrimary"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_storage_analysis"
+                            android:layout_marginTop="8dp"
+                            android:textAppearance="?attr/textAppearanceLabelLarge"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </GridLayout>
 
         </LinearLayout>

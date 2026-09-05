@@ -90,6 +90,9 @@ class StartActivity : AppCompatActivity() {
         binding.btnNavSimpleScreenshot.setOnClickListener {
             startActivity(Intent(this, SimpleScreenshotActivity::class.java))
         }
+        binding.btnNavStorageAnalysis.setOnClickListener {
+            startActivity(Intent(this, StorageAnalysisActivity::class.java))
+        }
     }
 
     private fun openUrl(url: String, title: String) {

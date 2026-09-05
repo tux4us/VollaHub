@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
 
     <application
@@ -81,6 +82,12 @@
             android:label="@string/btn_simple_screenshot"
             android:theme="@style/Theme.VollaHub.Translucent"
             android:parentActivityName="com.volla.hub.StartActivity" />
+
+        <activity
+            android:name="com.volla.hub.StorageAnalysisActivity"
+            android:exported="false"
+            android:label="Speicher-Analyse"
+            android:parentActivityName="com.volla.hub.MainActivity" />
 
         <service
             android:name="com.volla.hub.ScreenshotService"
