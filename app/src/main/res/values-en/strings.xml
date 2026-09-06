@@ -44,8 +44,8 @@
     <string name="nav_chat">HelpBot</string>
     <string name="chat_welcome">Hi! I\'m the Volla HelpBot. How can I help you today?</string>
     <string name="chat_hint">Ask a question…</string>
-    <string name="chat_no_results">Sorry, I couldn\'t find anything about that in the German wiki and forum articles. Have you tried different keywords?</string>
-    <string name="chat_results_found">I found the following information in the German sources for you:</string>
+    <string name="chat_no_results">Sorry, I couldn\'t find anything about that in the articles in the Wiki and Forum. Have you tried different keywords?</string>
+    <string name="chat_results_found">I found the following information in the sources for you:</string>
     <string name="chat_searching">Let me check the wiki and forum…</string>
     <string name="chat_error">Oops, something went wrong with the search. Please try again shortly.</string>
 
@@ -81,7 +81,7 @@
     <string name="forum_title_en">English Forum</string>
     <string name="forum_title_es">Español Forum</string>
     <string name="load_more_posts">Load More Posts</string>
-    <string name="wiki_main_page_title">Hauptseite</string>
+    <string name="wiki_main_page_title">Main Page</string>
 
     <!-- App info dialog (shared utility) -->
     <string name="appinfo_message">App version: %1$s\n\nApp developer: tux4us\nGitHub: https://github.com/tux4us/VollaHubAndroidApp</string>

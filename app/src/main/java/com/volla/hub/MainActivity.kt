@@ -121,10 +121,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadInitialContent() {
         showView(currentView)
+        val lang = LanguageHelper.getCurrentLanguage(this)
         when (currentView) {
             VIEW_ONLINE -> loadOnlineContent()
             VIEW_BLOG -> loadBlogContent()
-            VIEW_WIKI -> loadWikiLanguage("de", "Hauptseite")
+            VIEW_WIKI -> {
+                val wikiStartPage = if (lang == LanguageHelper.LANG_EN) "English" else "Hauptseite"
+                loadWikiLanguage(lang, wikiStartPage)
+            }
             VIEW_FORUM -> {} // Nur statische Buttons
         }
     }
@@ -139,9 +143,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadOnlineContent() {
         binding.progressBar.visibility = View.VISIBLE
+        val lang = LanguageHelper.getCurrentLanguage(this)
         lifecycleScope.launch {
             try {
-                val online = withContext(Dispatchers.IO) { vollaParser.parseOnlinePages() }
+                val online = withContext(Dispatchers.IO) { vollaParser.parseOnlinePages(lang) }
                 allOnlinePages = online
                 onlineAdapter.submitList(online)
                 binding.progressBar.visibility = View.GONE
@@ -154,9 +159,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadBlogContent() {
         binding.progressBar.visibility = View.VISIBLE
+        val lang = LanguageHelper.getCurrentLanguage(this)
         lifecycleScope.launch {
             try {
-                val blog = withContext(Dispatchers.IO) { vollaParser.parseBlog() }
+                val blog = withContext(Dispatchers.IO) { vollaParser.parseBlog(lang) }
                 allBlogPosts = blog
                 blogAdapter.submitList(blog.take(20))
                 binding.progressBar.visibility = View.GONE
@@ -172,7 +178,7 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val articles = withContext(Dispatchers.IO) { vollaParser.parseWiki(title) }
+                val articles = withContext(Dispatchers.IO) { vollaParser.parseWiki(title, lang) }
                 allWikiArticles = articles
                 wikiAdapter.submitList(articles)
                 binding.progressBar.visibility = View.GONE

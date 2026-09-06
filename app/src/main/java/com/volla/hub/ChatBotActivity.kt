@@ -107,15 +107,18 @@ class ChatBotActivity : AppCompatActivity() {
         binding.etMessage.text.clear()
         binding.progressBar.visibility = View.VISIBLE
 
+        val lang = LanguageHelper.getCurrentLanguage(this)
         // "Training" / System-Definition für die Zukunft
-        // Der Bot agiert als freundlicher, rein deutschsprachiger Volla-Experte
-        val botSystemPrompt = "Name: Volla HelpBot. Sprache: Deutsch. Mission: Hilfe zum Volla Phone."
+        val botSystemPrompt = if (lang == LanguageHelper.LANG_EN) 
+            "Name: Volla HelpBot. Language: English. Mission: Help for Volla Phone."
+        else 
+            "Name: Volla HelpBot. Sprache: Deutsch. Mission: Hilfe zum Volla Phone."
 
         lifecycleScope.launch {
             try {
-                val wikiResults = withContext(Dispatchers.IO) { vollaParser.searchWiki(query) }
-                val forumResults = withContext(Dispatchers.IO) { vollaParser.searchForum(query) }
-                val onlineResults = withContext(Dispatchers.IO) { vollaParser.searchOnline(query) }
+                val wikiResults = withContext(Dispatchers.IO) { vollaParser.searchWiki(query, lang) }
+                val forumResults = withContext(Dispatchers.IO) { vollaParser.searchForum(query, lang) }
+                val onlineResults = withContext(Dispatchers.IO) { vollaParser.searchOnline(query, lang) }
                 
                 val combined = wikiResults + forumResults + onlineResults
                 

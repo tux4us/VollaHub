@@ -134,10 +134,11 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun loadLatestBlog() {
+        val lang = LanguageHelper.getCurrentLanguage(this)
         lifecycleScope.launch {
             try {
                 val blog = withContext(Dispatchers.IO) {
-                    vollaParser.parseBlog()
+                    vollaParser.parseBlog(lang)
                 }
                 if (blog.isNotEmpty()) {
                     val latest = blog.first()

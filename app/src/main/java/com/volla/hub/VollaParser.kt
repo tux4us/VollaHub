@@ -14,12 +14,12 @@ class VollaParser {
     private val baseUrl = "https://volla.online"
     private val wikiBaseUrl = "http://wiki.volla.online"
 
-    suspend fun parseOnlinePages(): List<ContentItem> {
+    suspend fun parseOnlinePages(lang: String = "de"): List<ContentItem> {
         val pages = mutableListOf<ContentItem>()
 
         try {
-            android.util.Log.d("VollaParser", "Lade Volla Online Seiten...")
-            val doc = Jsoup.connect("$baseUrl/de/")
+            android.util.Log.d("VollaParser", "Lade Volla Online Seiten ($lang)...")
+            val doc = Jsoup.connect("$baseUrl/$lang/")
                 .userAgent("Mozilla/5.0")
                 .timeout(15000)
                 .get()
@@ -31,7 +31,7 @@ class VollaParser {
                 val href = link.attr("abs:href")
                 val title = link.text()
 
-                if (href.startsWith("$baseUrl/de/") &&
+                if (href.startsWith("$baseUrl/$lang/") &&
                     !href.contains("/blog") &&
                     !href.contains("#") &&
                     title.length > 2 &&
@@ -50,12 +50,12 @@ class VollaParser {
         return pages.sortedBy { it.level }
     }
 
-    suspend fun parseBlog(): List<ContentItem> {
+    suspend fun parseBlog(lang: String = "de"): List<ContentItem> {
         val posts = mutableListOf<ContentItem>()
 
         try {
-            android.util.Log.d("VollaParser", "Lade Blog...")
-            val doc = Jsoup.connect("$baseUrl/de/blog/")
+            android.util.Log.d("VollaParser", "Lade Blog ($lang)...")
+            val doc = Jsoup.connect("$baseUrl/$lang/blog/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                 .timeout(30000)
                 .followRedirects(true)
@@ -71,7 +71,7 @@ class VollaParser {
                 val linkElem = entry.select("a[href]").firstOrNull()
                 val url = linkElem?.attr("abs:href") ?: ""
 
-                val finalUrl = if (url.isEmpty() || !url.contains("/de/blog/")) {
+                val finalUrl = if (url.isEmpty() || !url.contains("/$lang/blog/")) {
                     val slug = title.lowercase()
                         .replace(Regex("[^a-z0-9äöüß\\s-]"), "")
                         .replace(Regex("\\s+"), "-")
@@ -79,7 +79,7 @@ class VollaParser {
                         .replace("ö", "oe")
                         .replace("ü", "ue")
                         .replace("ß", "ss")
-                    "$baseUrl/de/blog/$slug/"
+                    "$baseUrl/$lang/blog/$slug/"
                 } else {
                     url
                 }
@@ -99,11 +99,11 @@ class VollaParser {
         return posts
     }
 
-    suspend fun parseWiki(pageName: String): List<ContentItem> {
+    suspend fun parseWiki(pageName: String, lang: String = "de"): List<ContentItem> {
         val articles = mutableListOf<ContentItem>()
 
         try {
-            android.util.Log.d("VollaParser", "Lade Wiki: $pageName...")
+            android.util.Log.d("VollaParser", "Lade Wiki ($lang): $pageName...")
             val doc = Jsoup.connect("$wikiBaseUrl/index.php?title=$pageName")
                 .userAgent("Mozilla/5.0")
                 .timeout(15000)
@@ -143,7 +143,7 @@ class VollaParser {
         return articles
     }
 
-    suspend fun searchWiki(query: String): List<ContentItem> {
+    suspend fun searchWiki(query: String, lang: String = "de"): List<ContentItem> {
         val results = mutableListOf<ContentItem>()
         try {
             val url = "$wikiBaseUrl/index.php?search=${java.net.URLEncoder.encode(query, "UTF-8")}&title=Spezial:Suche&fulltext=1"
@@ -155,10 +155,14 @@ class VollaParser {
                 val title = link?.text() ?: ""
                 val href = link?.attr("abs:href") ?: ""
                 
-                // Filter: Ignoriere offensichtlich nicht-deutsche Seiten (z.B. englische Übersetzungen)
-                if (href.contains("/en/") || title.contains("(en)", ignoreCase = true) || title.startsWith("En/")) {
-                    continue
+                // Filter basierend auf Sprache
+                if (lang == "de") {
+                    if (href.contains("/en/") || title.contains("(en)", ignoreCase = true) || title.startsWith("En/")) {
+                        continue
+                    }
                 }
+                // Für Englisch (lang == "en") lassen wir vorerst alle Ergebnisse zu,
+                // da das Wiki vorwiegend deutschsprachig ist und wir so mehr Treffer liefern.
 
                 val excerpt = result.select(".searchresult").text()
                 results.add(ContentItem(title, href, excerpt))
@@ -169,11 +173,16 @@ class VollaParser {
         return results
     }
 
-    suspend fun searchForum(query: String): List<ContentItem> {
+    suspend fun searchForum(query: String, lang: String = "de"): List<ContentItem> {
         val results = mutableListOf<ContentItem>()
         try {
-            // f=94 ist der Hauptbereich für Deutsch im Volla Forum
-            val url = "https://forum.volla.online/search.php?keywords=${java.net.URLEncoder.encode(query, "UTF-8")}&fid[]=94"
+            // Forum IDs: DE=94, EN=26, ES=119
+            val fid = when(lang) {
+                "en" -> 26
+                "es" -> 119
+                else -> 94
+            }
+            val url = "https://forum.volla.online/search.php?keywords=${java.net.URLEncoder.encode(query, "UTF-8")}&fid[]=$fid"
             val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
             
             val topics = doc.select(".search.post") 
@@ -200,10 +209,10 @@ class VollaParser {
         return results
     }
 
-    suspend fun searchOnline(query: String): List<ContentItem> {
+    suspend fun searchOnline(query: String, lang: String = "de"): List<ContentItem> {
         val results = mutableListOf<ContentItem>()
         try {
-            val url = "$baseUrl/de/?s=${java.net.URLEncoder.encode(query, "UTF-8")}"
+            val url = "$baseUrl/$lang/?s=${java.net.URLEncoder.encode(query, "UTF-8")}"
             val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
             
             val articles = doc.select("article, .post, .entry")
