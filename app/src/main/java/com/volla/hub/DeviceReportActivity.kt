@@ -54,7 +54,7 @@ class DeviceReportActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Geräte-Report"
+        supportActionBar?.title = getString(R.string.report_toolbar_title)
 
         binding.rvImages.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvImages.adapter = imageAdapter
@@ -107,7 +107,7 @@ class DeviceReportActivity : AppCompatActivity() {
         val usedPercent = (usedRam.toFloat() / totalRam.toFloat()) * 100
         
         binding.ramChart.addSample(usedPercent)
-        binding.tvRamStats.text = "RAM: ${usedRam}MB / ${totalRam}MB (${usedPercent.toInt()}%)"
+        binding.tvRamStats.text = getString(R.string.ram_stats_format, usedRam.toInt(), totalRam.toInt(), usedPercent.toInt())
     }
 
     private fun resetToNewReport() {
@@ -120,7 +120,7 @@ class DeviceReportActivity : AppCompatActivity() {
         displayDeviceSpecs()
         autoDetectStatus()
         binding.btnNewReport.visibility = View.GONE
-        Toast.makeText(this, "Bereit für neuen Bericht", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.ready_for_new_report), Toast.LENGTH_SHORT).show()
     }
 
     private fun showAppSelectionDialog() {
@@ -176,16 +176,16 @@ class DeviceReportActivity : AppCompatActivity() {
             packageManager.getPackageInfo(packageName, 0).versionName
         } catch (e: Exception) { "3.5" }
         val specs = StringBuilder()
-        specs.append("Erstellt mit: VollaHub #$version\n\n")
-        specs.append("--- BASIS DATEN ---\n")
-        specs.append("HERSTELLER: ${Build.MANUFACTURER}\n")
-        specs.append("MODELL: ${Build.MODEL}\n")
-        specs.append("GERÄT: ${Build.DEVICE}\n")
-        specs.append("BOARD: ${Build.BOARD}\n")
-        specs.append("HARDWARE: ${Build.HARDWARE}\n")
-        specs.append("ANDROID VERSION: ${Build.VERSION.RELEASE}\n")
-        specs.append("SDK VERSION: ${Build.VERSION.SDK_INT}\n")
-        specs.append("BUILD ID: ${Build.ID}\n")
+        specs.append(getString(R.string.report_created_with, version)).append("\n\n")
+        specs.append(getString(R.string.report_section_base_data)).append("\n")
+        specs.append(getString(R.string.report_manufacturer, Build.MANUFACTURER)).append("\n")
+        specs.append(getString(R.string.report_model, Build.MODEL)).append("\n")
+        specs.append(getString(R.string.report_device, Build.DEVICE)).append("\n")
+        specs.append(getString(R.string.report_board, Build.BOARD)).append("\n")
+        specs.append(getString(R.string.report_hardware, Build.HARDWARE)).append("\n")
+        specs.append(getString(R.string.report_android_version, Build.VERSION.RELEASE)).append("\n")
+        specs.append(getString(R.string.report_sdk_version, Build.VERSION.SDK_INT.toString())).append("\n")
+        specs.append(getString(R.string.report_build_id, Build.ID)).append("\n")
         
         // Batterie Status
         val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
@@ -195,15 +195,15 @@ class DeviceReportActivity : AppCompatActivity() {
         val scale: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
         val batteryPct = level * 100 / scale.toFloat()
         val health = when(batteryStatus?.getIntExtra(BatteryManager.EXTRA_HEALTH, -1)) {
-            BatteryManager.BATTERY_HEALTH_GOOD -> "Gut"
-            BatteryManager.BATTERY_HEALTH_OVERHEAT -> "Überhitzt"
-            BatteryManager.BATTERY_HEALTH_DEAD -> "Defekt"
-            else -> "Unbekannt"
+            BatteryManager.BATTERY_HEALTH_GOOD -> getString(R.string.battery_health_good)
+            BatteryManager.BATTERY_HEALTH_OVERHEAT -> getString(R.string.battery_health_overheat)
+            BatteryManager.BATTERY_HEALTH_DEAD -> getString(R.string.battery_health_dead)
+            else -> getString(R.string.battery_health_unknown)
         }
         
-        specs.append("\n--- ENERGIE ---\n")
-        specs.append("BATTERIE LADESTAND: $batteryPct%\n")
-        specs.append("BATTERIE ZUSTAND: $health\n")
+        specs.append("\n").append(getString(R.string.report_section_energy)).append("\n")
+        specs.append(getString(R.string.report_battery_level, batteryPct.toString())).append("\n")
+        specs.append(getString(R.string.report_battery_health, health)).append("\n")
         
         // RAM Stats
         val mi = ActivityManager.MemoryInfo()
@@ -212,14 +212,14 @@ class DeviceReportActivity : AppCompatActivity() {
         val totalRam = mi.totalMem / (1024 * 1024)
         val availableRam = mi.availMem / (1024 * 1024)
         
-        specs.append("\n--- SPEICHER (RAM) ---\n")
-        specs.append("TOTAL RAM: ${totalRam}MB\n")
-        specs.append("VERFÜGBAR: ${availableRam}MB\n")
-        specs.append("LOW MEMORY: ${if (mi.lowMemory) "JA" else "NEIN"}\n")
-        specs.append("SCHWELLENWERT: ${mi.threshold / (1024 * 1024)}MB\n")
+        specs.append("\n").append(getString(R.string.report_section_ram)).append("\n")
+        specs.append(getString(R.string.report_total_ram, totalRam.toString())).append("\n")
+        specs.append(getString(R.string.report_available_ram, availableRam.toString())).append("\n")
+        specs.append(getString(R.string.report_low_memory, if (mi.lowMemory) getString(R.string.yes) else getString(R.string.no))).append("\n")
+        specs.append(getString(R.string.report_threshold, (mi.threshold / (1024 * 1024)).toString())).append("\n")
         
-        specs.append("\n--- SYSTEM ---\n")
-        specs.append("FINGERPRINT: ${Build.FINGERPRINT}\n")
+        specs.append("\n").append(getString(R.string.report_section_system)).append("\n")
+        specs.append(getString(R.string.report_fingerprint, Build.FINGERPRINT)).append("\n")
         
         // Launcher Information
         try {
@@ -240,13 +240,13 @@ class DeviceReportActivity : AppCompatActivity() {
                 val appInfo = pInfo.applicationInfo
                 if (appInfo != null) {
                     val launcherName = packageManager.getApplicationLabel(appInfo).toString()
-                    val launcherVersion = pInfo.versionName ?: "Unbekannt"
-                    specs.append("LAUNCHER: $launcherName ($launcherPackage)\n")
-                    specs.append("LAUNCHER VERSION: $launcherVersion\n")
+                    val launcherVersion = pInfo.versionName ?: getString(R.string.report_launcher_unknown)
+                    specs.append(getString(R.string.report_launcher, launcherName, launcherPackage)).append("\n")
+                    specs.append(getString(R.string.report_launcher_version, launcherVersion)).append("\n")
                 }
             }
         } catch (e: Exception) {
-            specs.append("LAUNCHER: Fehler beim Auslesen\n")
+            specs.append(getString(R.string.report_launcher_error)).append("\n")
         }
         
         binding.tvDeviceSpecs.text = specs.toString()
@@ -261,33 +261,33 @@ class DeviceReportActivity : AppCompatActivity() {
         } catch (e: Exception) { "3.5" }
 
         val appsText = if (selectedApps.isNotEmpty()) {
-            val sb = StringBuilder("\nBETROFFENE APPS:\n")
+            val sb = StringBuilder(getString(R.string.report_affected_apps)).append("\n")
             selectedApps.forEach { app ->
-                sb.append("- ${app.name} (${app.packageName}) V: ${app.version}\n")
+                sb.append(getString(R.string.report_app_entry, app.name, app.packageName, app.version)).append("\n")
             }
             sb.toString()
         } else ""
 
-        return "VOLLA GERÄTE REPORT\n" +
-                "Erstellt mit: VollaHub #$version\n\n" +
-                "TITEL: $title\n\n" +
-                "NOTIZ:\n$note\n\n" +
-                "ZUSÄTZLICHE INFOS:\n" +
-                "- Shelter/Profil aktiv: ${if (binding.swShelter.isChecked) "Ja" else "Nein"}\n" +
-                "- Sicherheitsmodus aktiv: ${if (binding.swSecurityMode.isChecked) "Ja" else "Nein"}\n" +
-                "- VPN aktiv: ${if (binding.swVpn.isChecked) "Ja" else "Nein"}\n" +
+        return getString(R.string.report_title_header) + "\n" +
+                getString(R.string.report_created_with, version) + "\n\n" +
+                getString(R.string.report_field_title, title) + "\n\n" +
+                getString(R.string.report_field_note, note) + "\n\n" +
+                getString(R.string.report_additional_info) + "\n" +
+                getString(R.string.report_shelter_active, if (binding.swShelter.isChecked) getString(R.string.yes) else getString(R.string.no)) + "\n" +
+                getString(R.string.report_security_mode_active, if (binding.swSecurityMode.isChecked) getString(R.string.yes) else getString(R.string.no)) + "\n" +
+                getString(R.string.report_vpn_active, if (binding.swVpn.isChecked) getString(R.string.yes) else getString(R.string.no)) + "\n" +
                 appsText +
-                "\nSYSTEM-SPEZIFIKATIONEN:\n$specs"
+                getString(R.string.report_system_specs, specs)
     }
 
     private fun shareReport() {
         val reportText = getFullReportText()
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Volla Support Report: ${binding.etNoteTitle.text}")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_share_subject, binding.etNoteTitle.text.toString()))
             putExtra(Intent.EXTRA_TEXT, reportText)
         }
-        startActivity(Intent.createChooser(intent, "Report teilen via..."))
+        startActivity(Intent.createChooser(intent, getString(R.string.report_share_chooser_title)))
     }
 
     private fun saveAndStoreReport() {
@@ -330,7 +330,7 @@ class DeviceReportActivity : AppCompatActivity() {
         var y = 50f
         paint.textSize = 18f
         paint.isFakeBoldText = true
-        canvas.drawText("Volla Geräte Report", 50f, y, paint)
+        canvas.drawText(getString(R.string.report_pdf_header), 50f, y, paint)
         
         y += 40f
         paint.textSize = 12f
@@ -360,7 +360,7 @@ class DeviceReportActivity : AppCompatActivity() {
         
         paint.textSize = 14f
         paint.isFakeBoldText = true
-        canvas.drawText("RAM Auslastungsverlauf (letzte 5 Minuten)", 50f, 50f, paint)
+        canvas.drawText(getString(R.string.content_desc_ram_chart), 50f, 50f, paint)
         
         val chartBitmap = viewToBitmap(binding.ramChart)
         val chartScale = 495f / chartBitmap.width
@@ -395,9 +395,9 @@ class DeviceReportActivity : AppCompatActivity() {
             if (!dir.exists()) dir.mkdirs()
             val file = File(dir, fileName)
             pdfDocument.writeTo(FileOutputStream(file))
-            Toast.makeText(this, "PDF gespeichert: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.pdf_saved, file.absolutePath), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
-            Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_generic, e.message), Toast.LENGTH_SHORT).show()
         } finally {
             pdfDocument.close()
         }
@@ -416,14 +416,14 @@ class DeviceReportActivity : AppCompatActivity() {
             color = android.graphics.Color.GRAY
             textAlign = Paint.Align.CENTER
         }
-        canvas.drawText("Erstellt mit VollaHub für Android. Eine App entwickelt von https://github.com/tux4us für die Community.", 297f, 820f, footerPaint)
+        canvas.drawText(getString(R.string.report_pdf_footer), 297f, 820f, footerPaint)
     }
 
     private fun copySpecsToClipboard() {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
         val clip = android.content.ClipData.newPlainText("Volla Device Specs", binding.tvDeviceSpecs.text)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, "Spezifikationen kopiert", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.specs_copied), Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
@@ -447,27 +447,20 @@ class DeviceReportActivity : AppCompatActivity() {
                 toggleTheme()
                 true
             }
+            R.id.action_lang_de -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_DE)
+                true
+            }
+            R.id.action_lang_en -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_EN)
+                true
+            }
             R.id.action_developer -> {
-                showDeveloperInfo()
+                AppInfoDialog.show(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun showDeveloperInfo() {
-        val version = try {
-            packageManager.getPackageInfo(packageName, 0).versionName
-        } catch (e: Exception) { "3.5" }
-        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
-        builder.setTitle("Appinfo")
-        builder.setMessage("App-Version: $version\n\nEntwickler der App: tux4us\nGitHub: https://github.com/tux4us/VollaHubAndroidApp")
-        builder.setPositiveButton("GitHub öffnen") { _, _ ->
-            val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/tux4us/VollaHubAndroidApp"))
-            startActivity(intent)
-        }
-        builder.setNegativeButton("Schließen", null)
-        builder.show()
     }
 
     private fun toggleTheme() {

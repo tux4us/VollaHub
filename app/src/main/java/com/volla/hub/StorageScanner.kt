@@ -13,7 +13,10 @@ import java.io.File
  * Ohne diese Berechtigung liefert scanTopLevelOnly() eine grobe, aber ohne
  * Sonderrechte funktionierende Kategorie-Übersicht (Fallback).
  */
-class StorageScanner {
+class StorageScanner(private val context: android.content.Context? = null) {
+
+    private fun rootFallbackName(): String =
+        context?.getString(R.string.storage_root_label) ?: "Speicher"
 
     data class ScanProgress(val currentPath: String, val scannedBytes: Long)
 
@@ -27,7 +30,7 @@ class StorageScanner {
     ): StorageNode = withContext(Dispatchers.IO) {
         val root = Environment.getExternalStorageDirectory()
         val rootNode = StorageNode(
-            name = root.name.ifEmpty { "Speicher" },
+            name = root.name.ifEmpty { rootFallbackName() },
             path = root.absolutePath,
             isDirectory = true
         )

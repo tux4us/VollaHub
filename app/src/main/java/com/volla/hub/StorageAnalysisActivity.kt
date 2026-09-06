@@ -23,7 +23,7 @@ import java.util.ArrayDeque
 class StorageAnalysisActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStorageAnalysisBinding
-    private val scanner = StorageScanner()
+    private val scanner = StorageScanner(this)
     private lateinit var adapter: StorageNodeAdapter
 
     private var rootNode: StorageNode? = null
@@ -39,7 +39,7 @@ class StorageAnalysisActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Speicherbelegung"
+        supportActionBar?.title = getString(R.string.storage_analysis_toolbar_title)
 
         adapter = StorageNodeAdapter { node -> drillInto(node) }
         binding.rvStorageNodes.layoutManager = LinearLayoutManager(this)
@@ -91,7 +91,7 @@ class StorageAnalysisActivity : AppCompatActivity() {
         val (total, used, free) = scanner.getStatFsSummary()
         totalDeviceBytes = total.coerceAtLeast(1L)
         val percent = (used.toFloat() / total.toFloat() * 100f).toInt()
-        binding.tvSummary.text = "${formatBytes(used)} von ${formatBytes(total)} belegt ($percent%) · ${formatBytes(free)} frei"
+        binding.tvSummary.text = getString(R.string.storage_usage_summary, formatBytes(used), formatBytes(total), percent.toString(), formatBytes(free))
         binding.progressOverall.progress = percent.coerceIn(0, 100)
     }
 
@@ -105,7 +105,7 @@ class StorageAnalysisActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val result = scanner.scanFull { progress ->
                 runOnUiThread {
-                    binding.tvScanStatus.text = "Scanne: ${progress.currentPath}"
+                    binding.tvScanStatus.text = getString(R.string.storage_scan_status, progress.currentPath)
                 }
             }
             rootNode = result
@@ -153,7 +153,8 @@ class StorageAnalysisActivity : AppCompatActivity() {
     private fun buildBreadcrumb(node: StorageNode): String {
         val root = Environment.getExternalStorageDirectory().absolutePath
         val relative = node.path.removePrefix(root)
-        return if (relative.isEmpty()) "Speicher" else "Speicher${relative.replace("/", " / ")}"
+        val rootLabel = getString(R.string.storage_root_label)
+        return if (relative.isEmpty()) rootLabel else "$rootLabel${relative.replace("/", " / ")}"
     }
 
     override fun onSupportNavigateUp(): Boolean {

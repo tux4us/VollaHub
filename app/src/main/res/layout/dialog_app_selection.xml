@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Apps auswählen"
+        android:text="@string/dialog_select_apps_title"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
@@ -17,7 +17,7 @@
         android:id="@+id/etSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Suchen..."
+        android:hint="@string/search_hint_dots"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:layout_marginBottom="8dp"/>
@@ -40,13 +40,13 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Abbrechen" />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/btnSelect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Auswählen"
+            android:text="@string/select"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 </LinearLayout>

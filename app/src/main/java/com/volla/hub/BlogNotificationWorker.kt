@@ -42,7 +42,7 @@ class BlogNotificationWorker(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Blog Benachrichtigungen",
+                applicationContext.getString(R.string.blog_notification_channel),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)
@@ -58,7 +58,7 @@ class BlogNotificationWorker(
 
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle("Neuer Volla Blogartikel!")
+            .setContentTitle(applicationContext.getString(R.string.blog_notification_new_post))
             .setContentText(item.title)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)

@@ -50,7 +50,7 @@
                 android:paddingStart="6dp" android:paddingEnd="6dp"
                 android:paddingTop="2dp" android:paddingBottom="2dp"
                 android:background="#CC000000"
-                android:text="© OpenStreetMap contributors"
+                android:text="@string/osm_attribution"
                 android:textColor="#FFFFFF"
                 android:textSize="8sp"
                 android:clickable="true" android:focusable="true"
@@ -69,7 +69,7 @@
                     android:id="@+id/btnRefreshMap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔄 Aktualisieren"
+                    android:text="@string/btn_update"
                     android:textSize="12sp"
                     android:padding="8dp"
                     app:cornerRadius="8dp" />
@@ -78,7 +78,7 @@
                     android:id="@+id/btnCenterLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📍 Standort"
+                    android:text="@string/location_label"
                     android:textSize="12sp"
                     android:padding="8dp"
                     android:checkable="true"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="16dp"
-                android:text="🧭 -- km • -- Min"
+                android:text="@string/distance_time_placeholder"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -142,7 +142,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="📍 Standort teilen"
+                                android:text="@string/btn_share_location"
                                 android:textColor="?attr/colorPrimary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -150,7 +150,7 @@
                                 android:id="@+id/tvShareStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Freigabe inaktiv"
+                                android:text="@string/sharing_inactive"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -166,14 +166,14 @@
                             android:src="@android:drawable/ic_menu_manage"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             app:tint="?attr/colorPrimary"
-                            android:contentDescription="WebDAV Einstellungen" />
+                            android:contentDescription="@string/content_desc_webdav_settings" />
                     </LinearLayout>
 
                     <!-- Routing profile -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Route zum Gerät"
+                        android:text="@string/route_to_device"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
@@ -193,7 +193,7 @@
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             android:layout_weight="1"
-                            android:text="🥾 Zu Fuß" />
+                            android:text="@string/mode_walking" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnProfileBike"
@@ -201,14 +201,14 @@
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             android:layout_weight="1"
-                            android:text="🚲 Fahrrad" />
+                            android:text="@string/mode_cycling" />
                     </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <!-- Display name -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Anzeigename auf anderen Geräten"
+                        android:hint="@string/display_name_hint"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_marginBottom="12dp">
 
@@ -224,7 +224,7 @@
                         android:id="@+id/tvMapStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Gefundene Geräte:"
+                        android:text="@string/devices_found"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -255,14 +255,14 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="⚠️ WebDAV nicht eingerichtet. Bitte Zugangsdaten hinterlegen."
+                                android:text="@string/webdav_not_configured"
                                 android:textSize="12sp" />
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnConfigureWebDav"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="WebDAV einrichten" />
+                                android:text="@string/setup_webdav" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 

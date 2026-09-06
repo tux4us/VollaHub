@@ -53,7 +53,7 @@ class SimpleScreenshotActivity : AppCompatActivity() {
                     startService(serviceIntent)
                 }
             } else {
-                Toast.makeText(this, "Berechtigung verweigert", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
             }
             finish()
         }

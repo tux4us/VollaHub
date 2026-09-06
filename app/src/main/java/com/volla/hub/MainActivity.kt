@@ -59,11 +59,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateToolbarTitle() {
         supportActionBar?.title = when (currentView) {
-            VIEW_ONLINE -> "Volla Online"
-            VIEW_BLOG -> "Volla Blog"
-            VIEW_WIKI -> "Volla Wiki"
-            VIEW_FORUM -> "Volla Forum"
-            else -> "Volla Hub"
+            VIEW_ONLINE -> getString(R.string.nav_volla_online)
+            VIEW_BLOG -> getString(R.string.nav_volla_blog)
+            VIEW_WIKI -> getString(R.string.nav_volla_wiki)
+            VIEW_FORUM -> getString(R.string.nav_volla_forum)
+            else -> getString(R.string.app_name)
         }
     }
 
@@ -106,9 +106,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnWikiIt.setOnClickListener { loadWikiLanguage("it", "Italiano") }
         binding.btnWikiEs.setOnClickListener { loadWikiLanguage("es", "Espa%C3%B1ol") }
 
-        binding.btnForumDe.setOnClickListener { openForumUrl("https://forum.volla.online/viewforum.php?f=94", "Deutsch Forum") }
-        binding.btnForumEn.setOnClickListener { openForumUrl("https://forum.volla.online/viewforum.php?f=26", "English Forum") }
-        binding.btnForumEs.setOnClickListener { openForumUrl("https://forum.volla.online/viewforum.php?f=119", "Español Forum") }
+        binding.btnForumDe.setOnClickListener { openForumUrl("https://forum.volla.online/viewforum.php?f=94", getString(R.string.forum_title_de)) }
+        binding.btnForumEn.setOnClickListener { openForumUrl("https://forum.volla.online/viewforum.php?f=26", getString(R.string.forum_title_en)) }
+        binding.btnForumEs.setOnClickListener { openForumUrl("https://forum.volla.online/viewforum.php?f=119", getString(R.string.forum_title_es)) }
     }
 
     private fun openForumUrl(url: String, title: String) {
@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
     private fun showError(message: String?) {
         binding.progressBar.visibility = View.GONE
         binding.swipeRefresh.isRefreshing = false
-        binding.errorText.text = "Fehler: $message"
+        binding.errorText.text = getString(R.string.error_prefix, message)
         binding.errorText.visibility = View.VISIBLE
     }
 
@@ -245,31 +245,24 @@ class MainActivity : AppCompatActivity() {
                 toggleTheme()
                 true
             }
+            R.id.action_lang_de -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_DE)
+                true
+            }
+            R.id.action_lang_en -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_EN)
+                true
+            }
             R.id.action_report -> {
                 startActivity(Intent(this, DeviceReportActivity::class.java))
                 true
             }
             R.id.action_developer -> {
-                showDeveloperInfo()
+                AppInfoDialog.show(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun showDeveloperInfo() {
-        val version = try {
-            packageManager.getPackageInfo(packageName, 0).versionName
-        } catch (e: Exception) { "3.5" }
-        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
-        builder.setTitle("Appinfo")
-        builder.setMessage("App-Version: $version\n\nEntwickler der App: tux4us\nGitHub: https://github.com/tux4us/VollaHubAndroidApp")
-        builder.setPositiveButton("GitHub öffnen") { _, _ ->
-            val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/tux4us/VollaHubAndroidApp"))
-            startActivity(intent)
-        }
-        builder.setNegativeButton("Schließen", null)
-        builder.show()
     }
 
     private fun toggleTheme() {

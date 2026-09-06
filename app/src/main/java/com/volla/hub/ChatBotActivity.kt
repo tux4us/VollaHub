@@ -25,7 +25,7 @@ class ChatBotActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "VollaHub HelpBot"
+        supportActionBar?.title = getString(R.string.helpbot_toolbar_title)
 
         adapter = ChatAdapter { item ->
             val intent = Intent(this, ContentActivity::class.java).apply {
@@ -68,11 +68,19 @@ class ChatBotActivity : AppCompatActivity() {
                 true
             }
             R.id.action_developer -> {
-                showDeveloperInfo()
+                AppInfoDialog.show(this)
                 true
             }
             R.id.action_theme -> {
                 toggleTheme()
+                true
+            }
+            R.id.action_lang_de -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_DE)
+                true
+            }
+            R.id.action_lang_en -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_EN)
                 true
             }
             R.id.action_report -> {
@@ -81,21 +89,6 @@ class ChatBotActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun showDeveloperInfo() {
-        val version = try {
-            packageManager.getPackageInfo(packageName, 0).versionName
-        } catch (e: Exception) { "3.5" }
-        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
-        builder.setTitle("Appinfo")
-        builder.setMessage("App-Version: $version\n\nEntwickler der App: tux4us\nGitHub: https://github.com/tux4us/VollaHubAndroidApp")
-        builder.setPositiveButton("GitHub öffnen") { _, _ ->
-            val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/tux4us/VollaHubAndroidApp"))
-            startActivity(intent)
-        }
-        builder.setNegativeButton("Schließen", null)
-        builder.show()
     }
 
     private fun toggleTheme() {

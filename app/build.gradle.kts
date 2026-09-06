@@ -23,8 +23,8 @@ android {
         applicationId = "com.volla.hub"
         minSdk = 24
         targetSdk = 36
-        versionCode = 23
-        versionName = "6.4"
+        versionCode = 24
+        versionName = "7.0"
     }
 
     signingConfigs {

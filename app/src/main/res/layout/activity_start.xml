@@ -53,7 +53,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Aktuellster Blogartikel"
+                        android:text="@string/latest_blog_post"
                         android:textAppearance="?attr/textAppearanceLabelLarge"
                         android:textColor="?attr/colorPrimary"
                         android:textStyle="bold" />
@@ -82,14 +82,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="Weiterlesen" />
+                        android:text="@string/read_more" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Entdecken"
+                android:text="@string/discover"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:layout_marginBottom="12dp" />
 
@@ -155,7 +155,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ortung"
+                            android:text="@string/location_sharing"
                             android:layout_marginStart="16dp"
                             android:textColor="#FFFFFF"
                             android:textAppearance="?attr/textAppearanceLabelLarge"
@@ -219,7 +219,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Volla Online"
+                            android:text="@string/nav_volla_online"
                             android:layout_marginTop="8dp"
                             android:textAppearance="?attr/textAppearanceLabelLarge"/>
                     </LinearLayout>
@@ -249,7 +249,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Volla Blog"
+                            android:text="@string/nav_volla_blog"
                             android:layout_marginTop="8dp"
                             android:textAppearance="?attr/textAppearanceLabelLarge"/>
                     </LinearLayout>
@@ -279,7 +279,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Volla Wiki"
+                            android:text="@string/nav_volla_wiki"
                             android:layout_marginTop="8dp"
                             android:textAppearance="?attr/textAppearanceLabelLarge"/>
                     </LinearLayout>
@@ -309,7 +309,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Volla Forum"
+                            android:text="@string/nav_volla_forum"
                             android:layout_marginTop="8dp"
                             android:textAppearance="?attr/textAppearanceLabelLarge"/>
                     </LinearLayout>

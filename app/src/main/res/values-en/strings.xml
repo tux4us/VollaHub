@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Volla Hub</string>
+
+    <!-- General / Reused -->
+    <string name="search">Search</string>
+    <string name="refresh">Refresh</string>
+    <string name="error_loading">Error loading: %s</string>
+    <string name="error_generic">Error: %s</string>
+    <string name="no_articles">No articles found</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="remove">Remove</string>
+
+    <!-- Home screen -->
+    <string name="btn_report_support">Device Report - Support Request</string>
+    <string name="btn_youtube">YouTube</string>
+    <string name="btn_github">GitHub</string>
+    <string name="btn_screenshot">Long Screenshot</string>
+    <string name="btn_simple_screenshot">Simple Screenshot</string>
+    <string name="btn_storage_analysis">Storage Usage</string>
+    <string name="latest_blog_post">Latest Blog Post</string>
+    <string name="read_more">Read More</string>
+    <string name="discover">Discover</string>
+    <string name="location_sharing">Location Sharing</string>
+    <string name="nav_volla_online">Volla Online</string>
+    <string name="nav_volla_blog">Volla Blog</string>
+    <string name="nav_volla_wiki">Volla Wiki</string>
+    <string name="nav_volla_forum">Volla Forum</string>
+
+    <!-- Storage permission -->
+    <string name="storage_permission_title">Storage Access Required</string>
+    <string name="storage_permission_desc">To analyze storage in detail, the app needs access to all files.</string>
+    <string name="btn_grant_permission">Grant Permission</string>
+    <string name="btn_up_one_level">Go Up One Level</string>
+    <string name="btn_rescan">Rescan</string>
+    <string name="storage_scan_status">Scanning: %s</string>
+    <string name="storage_usage_summary">%1$s of %2$s used (%3$s%%) · %4$s free</string>
+
+    <!-- Navigation / HelpBot -->
+    <string name="nav_social">Social Networks</string>
+    <string name="nav_chat">HelpBot</string>
+    <string name="chat_welcome">Hi! I\'m the Volla HelpBot. How can I help you today?</string>
+    <string name="chat_hint">Ask a question…</string>
+    <string name="chat_no_results">Sorry, I couldn\'t find anything about that in the German wiki and forum articles. Have you tried different keywords?</string>
+    <string name="chat_results_found">I found the following information in the German sources for you:</string>
+    <string name="chat_searching">Let me check the wiki and forum…</string>
+    <string name="chat_error">Oops, something went wrong with the search. Please try again shortly.</string>
+
+    <!-- Social Media -->
+    <string name="social_telegram">VollaCommunity on Telegram</string>
+    <string name="social_x">Volla on X</string>
+    <string name="social_facebook">Volla on Facebook</string>
+    <string name="social_instagram">Volla on Instagram</string>
+    <string name="social_mastodon">Volla on Mastodon</string>
+
+    <!-- Main menu (MainActivity) -->
+    <string name="menu_home">Home</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_report">Device Report</string>
+    <string name="menu_theme_toggle">Switch Theme</string>
+    <string name="menu_language_toggle">Switch Language</string>
+    <string name="menu_appinfo">App Info</string>
+    <string name="error_prefix">Error: %s</string>
+
+    <!-- Wiki/Forum language selection (deliberately NOT translated: these name -->
+    <!-- foreign-language content, not the UI language) -->
+    <string name="choose_your_language">Wähle deine Sprache:</string>
+    <string name="lang_flag_de">🇩🇪 Deutsch</string>
+    <string name="lang_flag_en">🇬🇧 English</string>
+    <string name="lang_flag_cs">🇨🇿 ČZ-SK</string>
+    <string name="lang_flag_it">🇮🇹 Italiano</string>
+    <string name="lang_flag_es">🇪🇸 Español</string>
+    <string name="forum_flag_de">🇩🇪 Forum Deutsch</string>
+    <string name="forum_flag_en">🇬🇧 Forum English</string>
+    <string name="forum_flag_es">🇪🇸 Foro Español</string>
+    <string name="forum_title_de">Deutsch Forum</string>
+    <string name="forum_title_en">English Forum</string>
+    <string name="forum_title_es">Español Forum</string>
+    <string name="load_more_posts">Load More Posts</string>
+    <string name="wiki_main_page_title">Hauptseite</string>
+
+    <!-- App info dialog (shared utility) -->
+    <string name="appinfo_message">App version: %1$s\n\nApp developer: tux4us\nGitHub: https://github.com/tux4us/VollaHubAndroidApp</string>
+    <string name="appinfo_open_github">Open GitHub</string>
+
+    <!-- Device Report -->
+    <string name="device_specs_title">Device Specifications</string>
+    <string name="copy">Copy</string>
+    <string name="ram_usage_title">RAM Usage (last 5 min)</string>
+    <string name="ram_stats_format">RAM: %1$dMB / %2$dMB (%3$d%%)</string>
+    <string name="note_title_hint">Note Title</string>
+    <string name="note_content_hint">Your Note / Problem Description</string>
+    <string name="switch_shelter">Additional profile / shelter active?</string>
+    <string name="switch_security_mode">VollaOS security mode active?</string>
+    <string name="switch_vpn">Using a VPN?</string>
+    <string name="btn_add_apps">Add Apps</string>
+    <string name="btn_add_photos">Add Photos</string>
+    <string name="btn_share_report">Share Report (Text Only)</string>
+    <string name="btn_save_pdf">Save as PDF (incl. Photos)</string>
+    <string name="btn_view_history">View Previous Reports</string>
+    <string name="btn_new_report">Create New Report</string>
+    <string name="ready_for_new_report">Ready for a new report</string>
+    <string name="pdf_saved">PDF saved: %s</string>
+    <string name="specs_copied">Specifications copied</string>
+    <string name="report_history_images_attached">%d images attached</string>
+
+    <!-- App/photo selection dialogs -->
+    <string name="dialog_select_apps_title">Select Apps</string>
+    <string name="select">Select</string>
+    <string name="search_hint_dots">Search...</string>
+    <string name="content_desc_app_icon">App icon</string>
+
+    <!-- Screenshot -->
+    <string name="screenshot_tool_title">Screenshot Tool</string>
+    <string name="screenshot_tool_desc">Here you can create screenshots and extended screenshots.</string>
+    <string name="screenshot_instructions_title">Instructions</string>
+    <string name="screenshot_instructions_body">1. Start the screenshot service.\n2. Switch to the desired app.\n3. Use the floating button to take screenshots.</string>
+    <string name="btn_start_screenshot_service">Start Screenshot Service</string>
+    <string name="long_screenshot">Long Screenshot</string>
+    <string name="btn_go_to_settings">Go to Settings</string>
+    <string name="btn_later">Later</string>
+    <string name="overlay_permission_needed">Overlay permission is required</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="content_desc_close">Close</string>
+    <string name="error_starting_screenshot_service">Error starting the screenshot service</string>
+    <string name="long_screenshot_starting">Starting long screenshot…</string>
+    <string name="processing_frames">Processing %d frames…</string>
+    <string name="error_stitching">Error while stitching: %s</string>
+    <string name="screenshot_saved">Screenshot saved</string>
+    <string name="error_saving">Save error: %s</string>
+    <string name="error_frame_capture">Error: could not capture frame</string>
+
+    <!-- Location sharing -->
+    <string name="osm_attribution">© OpenStreetMap contributors</string>
+    <string name="btn_update">🔄 Refresh</string>
+    <string name="location_label">📍 Location</string>
+    <string name="distance_time_placeholder">🧭 -- km • -- min</string>
+    <string name="btn_share_location">📍 Share Location</string>
+    <string name="sharing_inactive">Sharing inactive</string>
+    <string name="route_to_device">Route to Device</string>
+    <string name="mode_walking">🥾 Walking</string>
+    <string name="mode_cycling">🚲 Cycling</string>
+    <string name="devices_found">Devices found:</string>
+    <string name="webdav_not_configured">⚠️ WebDAV not set up. Please add your credentials.</string>
+    <string name="setup_webdav">Set Up WebDAV</string>
+    <string name="display_name_hint">Display name on other devices</string>
+    <string name="content_desc_webdav_settings">WebDAV settings</string>
+    <string name="location_permission_needed">Location permission required</string>
+    <string name="ors_key_missing">Please add an OpenRouteService API key in settings</string>
+    <string name="btn_stop">🧭 Stop</string>
+    <string name="distance_time_format">🧭 %1$s • %2$s</string>
+    <string name="unknown_device">Unknown Device</string>
+    <string name="last_seen_placeholder">2 min ago</string>
+    <string name="distance_placeholder">-- km</string>
+    <string name="battery_placeholder">🔋 --%</string>
+    <string name="battery_format">🔋 %d%%</string>
+    <string name="lat_lon_placeholder">Lat: --, Lon: --</string>
+    <string name="lat_lon_format">Lat: %1$.6f, Lon: %2$.6f</string>
+    <string name="btn_route_emoji">🧭 Route</string>
+    <string name="btn_share_emoji">🔗 Share</string>
+    <string name="device_marker_format">📍 %s</string>
+    <string name="device_info_format">Distance: %1$s\nLast seen: %2$s</string>
+    <string name="btn_navigation">🧭 Navigation</string>
+    <string name="confirm_delete_credentials_title">Delete Credentials?</string>
+    <string name="confirm_delete_credentials_message">Do you really want to reset the WebDAV settings?</string>
+    <string name="credentials_deleted">✅ Data deleted</string>
+    <string name="error_url_username_missing">❌ URL and username missing</string>
+    <string name="testing_connection">⌛ Testing connection...</string>
+    <string name="connection_successful">✅ Connection successful!</string>
+    <string name="connection_failed">❌ Connection failed</string>
+    <string name="settings_saved">✅ Settings saved</string>
+    <string name="url_username_required">URL and username are required</string>
+    <string name="error_fetching">❌ Error fetching: %s</string>
+    <string name="webdav_config_description">Enter the WebDAV credentials used to share your location. Any device using the same credentials will see each other on the map.</string>
+    <string name="webdav_url_hint">Server URL (e.g. https://my.server.com/webdav)</string>
+    <string name="webdav_username_hint">Username</string>
+    <string name="webdav_password_hint">Password</string>
+    <string name="routing_optional">Routing (Optional)</string>
+    <string name="ors_api_key_hint">OpenRouteService API Key</string>
+    <string name="btn_test_connection">Test Connection</string>
+    <string name="btn_delete_credentials">Delete Credentials</string>
+
+    <!-- Additional location-sharing strings (map markers, dialogs) -->
+    <string name="no_devices_found">No devices found</string>
+    <string name="devices_found_count">Devices found (%d):</string>
+    <string name="marker_title_stale">⏸ %s</string>
+    <string name="last_seen_format">Last seen: %s</string>
+    <string name="share_location_via">Share location via</string>
+    <string name="share_location_text">📍 Location of %1$s:\n\nMap (OSM): %2$s\n\nNavigation link:\n%3$s\n\nCoordinates:\nLat: %4$s\nLon: %5$s</string>
+    <string name="minutes_short">%d min</string>
+    <string name="device_status_inactive">⏸ Inactive (%s)</string>
+    <string name="device_status_active">%s ago</string>
+    <string name="time_diff_seconds">%ds</string>
+    <string name="time_diff_minutes">%dm</string>
+    <string name="time_diff_hours">%dh</string>
+
+    <!-- Device report text (PDF/text export, follows app language) -->
+    <string name="report_toolbar_title">Device Report</string>
+    <string name="report_created_with">Created with: VollaHub #%s</string>
+    <string name="report_section_base_data">--- BASE DATA ---</string>
+    <string name="report_manufacturer">MANUFACTURER: %s</string>
+    <string name="report_model">MODEL: %s</string>
+    <string name="report_device">DEVICE: %s</string>
+    <string name="report_board">BOARD: %s</string>
+    <string name="report_hardware">HARDWARE: %s</string>
+    <string name="report_android_version">ANDROID VERSION: %s</string>
+    <string name="report_sdk_version">SDK VERSION: %s</string>
+    <string name="report_build_id">BUILD ID: %s</string>
+    <string name="report_section_energy">--- POWER ---</string>
+    <string name="report_battery_level">BATTERY LEVEL: %s%%</string>
+    <string name="report_battery_health">BATTERY HEALTH: %s</string>
+    <string name="battery_health_good">Good</string>
+    <string name="battery_health_overheat">Overheated</string>
+    <string name="battery_health_dead">Dead</string>
+    <string name="battery_health_unknown">Unknown</string>
+    <string name="report_section_ram">--- MEMORY (RAM) ---</string>
+    <string name="report_total_ram">TOTAL RAM: %sMB</string>
+    <string name="report_available_ram">AVAILABLE: %sMB</string>
+    <string name="report_low_memory">LOW MEMORY: %s</string>
+    <string name="report_threshold">THRESHOLD: %sMB</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="report_section_system">--- SYSTEM ---</string>
+    <string name="report_fingerprint">FINGERPRINT: %s</string>
+    <string name="report_launcher">LAUNCHER: %1$s (%2$s)</string>
+    <string name="report_launcher_version">LAUNCHER VERSION: %s</string>
+    <string name="report_launcher_unknown">Unknown</string>
+    <string name="report_launcher_error">LAUNCHER: Error reading launcher info</string>
+    <string name="report_title_header">VOLLA DEVICE REPORT</string>
+    <string name="report_field_title">TITLE: %s</string>
+    <string name="report_field_note">NOTE:\n%s</string>
+    <string name="report_additional_info">ADDITIONAL INFO:</string>
+    <string name="report_shelter_active">- Shelter/profile active: %s</string>
+    <string name="report_security_mode_active">- Security mode active: %s</string>
+    <string name="report_vpn_active">- VPN active: %s</string>
+    <string name="report_affected_apps">\nAFFECTED APPS:</string>
+    <string name="report_app_entry">- %1$s (%2$s) V: %3$s</string>
+    <string name="report_system_specs">\nSYSTEM SPECIFICATIONS:\n%s</string>
+    <string name="report_share_subject">Volla Support Report: %s</string>
+    <string name="report_share_chooser_title">Share Report via...</string>
+    <string name="report_pdf_header">Volla Device Report</string>
+    <string name="report_pdf_footer">Created with VollaHub for Android. An app developed by https://github.com/tux4us for the community.</string>
+    <string name="notification_screenshot_service_active">Screenshot service active</string>
+    <string name="notification_floating_button_available">Floating button for screenshots available</string>
+    <string name="accessibility_hint_message">To enable automatic scrolling for long screenshots, an accessibility service needs to be enabled once.\n\nSettings → Accessibility → VollaHub Scroll Service → Enable\n\nRegular screenshots work immediately without this setting.</string>
+
+    <!-- Addendum: additional UI strings found on re-review -->
+    <string name="helpbot_toolbar_title">VollaHub HelpBot</string>
+    <string name="blog_notification_channel">Blog Notifications</string>
+    <string name="blog_notification_new_post">New Volla blog post!</string>
+    <string name="content_desc_ram_chart">RAM usage history (last 5 minutes)</string>
+    <string name="location_sharing_toolbar_title">📍 Location Sharing</string>
+    <string name="sharing_active">✅ Sharing active</string>
+    <string name="ram_chart_axis_5min_ago">-5 min</string>
+    <string name="ram_chart_axis_now">Now</string>
+    <string name="report_history_toolbar_title">Report History</string>
+    <string name="report_history_untitled">Untitled Report</string>
+    <string name="report_history_no_note">No note available.</string>
+    <string name="screenshot_toolbar_title">Screenshot</string>
+    <string name="screenshot_service_channel_name">Screenshot Service</string>
+    <string name="screenshot_capturing">Capturing screenshot...</string>
+    <string name="storage_analysis_toolbar_title">Storage Usage</string>
+    <string name="storage_root_label">Storage</string>
+    <string name="storage_zoom_in">Zoom In</string>
+    <string name="location_sharing_active_notification_title">Location sharing active</string>
+    <string name="location_sharing_channel_name">Location Sharing</string>
+    <string name="location_sharing_channel_desc">Active location sharing in the background</string>
+    <string name="location_sharing_active_short">📍 Sharing active</string>
+    <string name="location_last_sent">Last sent: %s</string>
+
+    <!-- Storage categories -->
+    <string name="storage_category_images">Images</string>
+    <string name="storage_category_videos">Videos</string>
+    <string name="storage_category_audio">Audio</string>
+    <string name="storage_category_documents">Documents</string>
+    <string name="storage_category_apps">Apps &amp; Data</string>
+    <string name="storage_category_downloads">Downloads</string>
+    <string name="storage_category_system">System</string>
+    <string name="storage_category_cache">Cache</string>
+    <string name="storage_category_other">Other</string>
+    <string name="storage_category_free">Free</string>
+    <string name="app_version_unknown">Unknown</string>
+</resources>

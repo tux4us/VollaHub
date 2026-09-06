@@ -84,7 +84,7 @@ class ScreenshotService : Service() {
                 showFloatingButton()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this, "Fehler beim Starten des Screenshot-Dienstes", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.error_starting_screenshot_service), Toast.LENGTH_LONG).show()
                 stopSelf()
             }
         } else {
@@ -99,13 +99,13 @@ class ScreenshotService : Service() {
         val channelId = "screenshot_service"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelId, "Screenshot Service", NotificationManager.IMPORTANCE_LOW
+                channelId, getString(R.string.screenshot_service_channel_name), NotificationManager.IMPORTANCE_LOW
             )
             getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         }
         val notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Screenshot-Dienst aktiv")
-            .setContentText("Schwebender Button für Screenshots verfügbar")
+            .setContentTitle(getString(R.string.notification_screenshot_service_active))
+            .setContentText(getString(R.string.notification_floating_button_available))
             .setSmallIcon(android.R.drawable.ic_menu_camera)
             .build()
 
@@ -246,7 +246,7 @@ class ScreenshotService : Service() {
             imageReader?.setOnImageAvailableListener(null, null)
             capturedBitmaps.clear()
             updateLongButton(active = true)
-            Toast.makeText(this, "Langer Screenshot startet…", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.long_screenshot_starting), Toast.LENGTH_SHORT).show()
             // Kurz warten bis der Listener sicher deregistriert ist, dann ersten Frame holen
             handler.postDelayed({
                 captureFrameForLong()
@@ -287,7 +287,7 @@ class ScreenshotService : Service() {
         // isLongMode bleibt true bis processAndSaveLong() fertig ist,
         // damit der MediaProjection-Callback den Service nicht vorzeitig killt
         updateLongButton(active = false)
-        Toast.makeText(this, "Verarbeite ${capturedBitmaps.size} Frames…", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.processing_frames, capturedBitmaps.size), Toast.LENGTH_SHORT).show()
         handler.post {
             processAndSaveLong()
             isLongMode = false  // erst jetzt freigeben
@@ -359,7 +359,7 @@ class ScreenshotService : Service() {
             saveBitmap(result)
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Fehler beim Zusammensetzen: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.error_stitching, e.message), Toast.LENGTH_LONG).show()
         } finally {
             capturedBitmaps.forEach { it.recycle() }
             capturedBitmaps.clear()
@@ -626,11 +626,11 @@ class ScreenshotService : Service() {
                     contentValues.put(android.provider.MediaStore.MediaColumns.IS_PENDING, 0)
                     contentResolver.update(it, contentValues, null, null)
                 }
-                Toast.makeText(this, "Screenshot gespeichert", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.screenshot_saved), Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Speicherfehler: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_saving, e.message), Toast.LENGTH_SHORT).show()
             uri?.let { contentResolver.delete(it, null, null) }
         } finally {
             bitmap.recycle()

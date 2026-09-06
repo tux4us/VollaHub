@@ -79,7 +79,7 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
             startShareService()
         } else {
             binding.switchLocationShare.isChecked = false
-            Toast.makeText(this, "Standortberechtigung benötigt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.location_permission_needed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -91,7 +91,7 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "📍 Ortung"
+            title = getString(R.string.location_sharing_toolbar_title)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -265,11 +265,11 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
 
     private fun startNavigationTo(target: GeoPoint, label: String) {
         if (prefs.getOrsKey().isBlank()) {
-            Toast.makeText(this, "Bitte OpenRouteService API-Key in den Einstellungen hinterlegen", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.ors_key_missing), Toast.LENGTH_LONG).show()
         }
         isNavigating = true
         finalDestination = target
-        binding.btnCenterLocation.text = "🧭 Stopp"
+        binding.btnCenterLocation.text = getString(R.string.btn_stop)
         binding.btnCenterLocation.isChecked = true
         myLocationOverlay.enableFollowLocation()
         recalculateRoute()
@@ -279,7 +279,7 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
         isNavigating = false; finalDestination = null; currentRouteData = null
         currentRoutePolyline?.let { binding.mapView.overlays.remove(it) }
         currentRoutePolyline = null
-        binding.btnCenterLocation.text = "📍 Standort"
+        binding.btnCenterLocation.text = getString(R.string.location_label)
         binding.btnCenterLocation.isChecked = false
         binding.navigationInfoText.visibility = View.GONE
         binding.mapView.invalidate()
@@ -336,8 +336,8 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
         val km   = data.distance / 1000.0
         val mins = (data.duration / 60.0).toInt()
         val dText = if (km < 1.0) "${data.distance.toInt()} m" else "%.1f km".format(km)
-        val tText = if (mins < 60) "$mins Min" else "${mins/60}h ${mins%60}m"
-        binding.navigationInfoText.text = "🧭 $dText • $tText"
+        val tText = if (mins < 60) getString(R.string.minutes_short, mins) else "${mins/60}h ${mins%60}m"
+        binding.navigationInfoText.text = getString(R.string.distance_time_format, dText, tText)
         binding.navigationInfoText.visibility = View.VISIBLE
     }
 
@@ -381,7 +381,7 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
         deviceList.clear()
         deviceList.addAll(payloads.sortedByDescending { it.timestamp })
         deviceAdapter.notifyDataSetChanged()
-        binding.tvMapStatus.text = if (payloads.isEmpty()) "Keine Geräte gefunden" else "Gefundene Geräte (${payloads.size}):"
+        binding.tvMapStatus.text = if (payloads.isEmpty()) getString(R.string.no_devices_found) else getString(R.string.devices_found_count, payloads.size)
 
         for (payload in payloads) {
             seenIds.add(payload.deviceId)
@@ -393,8 +393,8 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
                 locationMarkers[payload.deviceId] = it
             }
             marker.position = pos
-            marker.title   = if (isStale) "⏸ ${payload.label}" else "📍 ${payload.label}"
-            marker.snippet = "Zuletzt: ${formatTime(payload.timestamp)}"
+            marker.title   = if (isStale) getString(R.string.marker_title_stale, payload.label) else getString(R.string.device_marker_format, payload.label)
+            marker.snippet = getString(R.string.last_seen_format, formatTime(payload.timestamp))
             marker.icon    = buildMarkerIcon(isStale, payload.label)
             marker.setOnMarkerClickListener { _, _ -> showPointInfoDialog(payload); true }
         }
@@ -406,12 +406,12 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
     private fun showPointInfoDialog(payload: LocationPayload) {
         val dist = currentLocation?.let { calculateDistance(it.latitude, it.longitude, payload.lat, payload.lon) } ?: 0.0
         AlertDialog.Builder(this)
-            .setTitle("📍 ${payload.label}")
-            .setMessage("Entfernung: ${formatDistance(dist)}\nZuletzt gesehen: ${formatTime(payload.timestamp)}")
-            .setPositiveButton("🧭 Navigation") { _, _ ->
+            .setTitle(getString(R.string.device_marker_format, payload.label))
+            .setMessage(getString(R.string.device_info_format, formatDistance(dist), formatTime(payload.timestamp)))
+            .setPositiveButton(getString(R.string.btn_navigation)) { _, _ ->
                 startNavigationTo(GeoPoint(payload.lat, payload.lon), payload.label)
             }
-            .setNegativeButton("Schließen", null)
+            .setNegativeButton(getString(R.string.close), null)
             .show()
     }
 
@@ -490,7 +490,7 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
     private fun updateShareStatus() {
         val running = LocationShareService.isServiceRunning
         if (binding.switchLocationShare.isChecked != running) binding.switchLocationShare.isChecked = running
-        binding.tvShareStatus.text = if (running) "✅ Freigabe aktiv" else "Freigabe inaktiv"
+        binding.tvShareStatus.text = if (running) getString(R.string.sharing_active) else getString(R.string.sharing_inactive)
     }
 
     private fun saveLabelFromInput() {
@@ -530,20 +530,20 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
 
         btnClear?.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("Zugangsdaten löschen?")
-                .setMessage("Möchtest du die WebDAV-Einstellungen wirklich zurücksetzen?")
-                .setPositiveButton("Löschen") { _, _ ->
+                .setTitle(getString(R.string.confirm_delete_credentials_title))
+                .setMessage(getString(R.string.confirm_delete_credentials_message))
+                .setPositiveButton(getString(R.string.delete)) { _, _ ->
                     prefs.clearCredentials()
                     etUrl.setText("")
                     etUser.setText("")
                     etPass.setText("")
                     etOrs?.setText("")
                     checkWebDavConfig()
-                    tvResult.text = "✅ Daten gelöscht"
+                    tvResult.text = getString(R.string.credentials_deleted)
                     tvResult.setTextColor(Color.GRAY)
                     tvResult.visibility = View.VISIBLE
                 }
-                .setNegativeButton("Abbrechen", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         }
 
@@ -553,13 +553,13 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
             val pass = etPass.text?.toString()?.trim() ?: ""
 
             if (url.isBlank() || user.isBlank()) {
-                tvResult.text = "❌ URL und Benutzername fehlen"
+                tvResult.text = getString(R.string.error_url_username_missing)
                 tvResult.setTextColor(Color.RED)
                 tvResult.visibility = View.VISIBLE
                 return@setOnClickListener
             }
 
-            tvResult.text = "⌛ Teste Verbindung..."
+            tvResult.text = getString(R.string.testing_connection)
             tvResult.setTextColor(Color.GRAY)
             tvResult.visibility = View.VISIBLE
             btnTest.isEnabled = false
@@ -572,10 +572,10 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
                 }
                 
                 if (success) {
-                    tvResult.text = "✅ Verbindung erfolgreich!"
+                    tvResult.text = getString(R.string.connection_successful)
                     tvResult.setTextColor(Color.parseColor("#4CAF50"))
                 } else {
-                    tvResult.text = "❌ Verbindung fehlgeschlagen"
+                    tvResult.text = getString(R.string.connection_failed)
                     tvResult.setTextColor(Color.RED)
                 }
                 btnTest.isEnabled = true
@@ -583,9 +583,9 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
         }
 
         AlertDialog.Builder(this)
-            .setTitle("WebDAV einrichten")
+            .setTitle(getString(R.string.setup_webdav))
             .setView(dialogView)
-            .setPositiveButton("Speichern") { _, _ ->
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
                 val url  = etUrl.text?.toString()?.trim() ?: ""
                 val user = etUser.text?.toString()?.trim() ?: ""
                 val pass = etPass.text?.toString()?.trim() ?: ""
@@ -595,12 +595,12 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
                     prefs.saveCredentials(url, user, pass)
                     prefs.saveOrsKey(ors)
                     checkWebDavConfig()
-                    Toast.makeText(this, "✅ Einstellungen gespeichert", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.settings_saved), Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "URL und Benutzername sind Pflichtfelder", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.url_username_required), Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Abbrechen", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -628,7 +628,7 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
             val filesResult = client.listFiles(LocationShareService.REMOTE_DIR)
             if (filesResult.isFailure) {
                 withContext(Dispatchers.Main) {
-                    binding.tvMapStatus.text = "❌ Fehler beim Abrufen: ${filesResult.exceptionOrNull()?.message}"
+                    binding.tvMapStatus.text = getString(R.string.error_fetching, filesResult.exceptionOrNull()?.message)
                 }
                 return@withContext
             }
@@ -698,13 +698,13 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
             val item    = items[position]
             val isStale = (System.currentTimeMillis() - item.timestamp) > STALE_THRESHOLD_MS
             holder.label.text    = item.label
-            holder.status.text   = if (isStale) "⏸ Inaktiv (${formatTime(item.timestamp)})" else "Vor ${formatTimeDiff(item.timestamp)}"
+            holder.status.text   = if (isStale) getString(R.string.device_status_inactive, formatTime(item.timestamp)) else getString(R.string.device_status_active, formatTimeDiff(item.timestamp))
             holder.icon.text     = if (isStale) "⏸" else "📍"
-            holder.coords.text   = "Lat: %.6f, Lon: %.6f".format(item.lat, item.lon)
+            holder.coords.text   = getString(R.string.lat_lon_format, item.lat, item.lon)
             holder.label.setTextColor(if (isStale) Color.GRAY else Color.WHITE)
             if (item.batteryLevel != null && item.batteryLevel != -1) {
                 holder.battery.visibility = View.VISIBLE
-                holder.battery.text = "🔋 ${item.batteryLevel}%"
+                holder.battery.text = getString(R.string.battery_format, item.batteryLevel)
                 holder.battery.setTextColor(when {
                     item.batteryLevel > 50 -> Color.parseColor("#4CAF50")
                     item.batteryLevel > 20 -> Color.parseColor("#FFC107")
@@ -722,19 +722,19 @@ class LocationShareActivity : AppCompatActivity(), LocationListener {
         private fun formatTimeDiff(t: Long): String {
             val diff = (System.currentTimeMillis() - t) / 1000
             return when {
-                diff < 60   -> "$diff sek"
-                diff < 3600 -> "${diff / 60} min"
-                else        -> "${diff / 3600} std"
+                diff < 60   -> getString(R.string.time_diff_seconds, diff)
+                diff < 3600 -> getString(R.string.time_diff_minutes, diff / 60)
+                else        -> getString(R.string.time_diff_hours, diff / 3600)
             }
         }
 
         private fun shareDeviceLocation(payload: LocationPayload) {
             val osmPreview = "https://www.openstreetmap.org/?mlat=${payload.lat}&mlon=${payload.lon}#map=17/${payload.lat}/${payload.lon}"
             val geoUri = "geo:${payload.lat},${payload.lon}?q=${payload.lat},${payload.lon}(${payload.label})"
-            val text = "📍 Standort von ${payload.label}:\n\nKarte (OSM): $osmPreview\n\nNavigations-Link:\n$geoUri\n\nKoordinaten:\nLat: ${payload.lat}\nLon: ${payload.lon}"
+            val text = getString(R.string.share_location_text, payload.label, osmPreview, geoUri, payload.lat.toString(), payload.lon.toString())
             startActivity(Intent.createChooser(
                 Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, text) },
-                "Standort teilen via"
+                getString(R.string.share_location_via)
             ))
         }
     }

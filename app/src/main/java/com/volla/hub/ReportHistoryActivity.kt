@@ -27,7 +27,7 @@ class ReportHistoryActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Bericht-Historie"
+        supportActionBar?.title = getString(R.string.report_history_toolbar_title)
 
         setupRecyclerView()
     }
@@ -62,27 +62,20 @@ class ReportHistoryActivity : AppCompatActivity() {
                 toggleTheme()
                 true
             }
+            R.id.action_lang_de -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_DE)
+                true
+            }
+            R.id.action_lang_en -> {
+                LanguageHelper.setLanguage(this, LanguageHelper.LANG_EN)
+                true
+            }
             R.id.action_developer -> {
-                showDeveloperInfo()
+                AppInfoDialog.show(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun showDeveloperInfo() {
-        val version = try {
-            packageManager.getPackageInfo(packageName, 0).versionName
-        } catch (e: Exception) { "3.5" }
-        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
-        builder.setTitle("Appinfo")
-        builder.setMessage("App-Version: $version\n\nEntwickler der App: tux4us\nGitHub: https://github.com/tux4us/VollaHubAndroidApp")
-        builder.setPositiveButton("GitHub öffnen") { _, _ ->
-            val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/tux4us/VollaHubAndroidApp"))
-            startActivity(intent)
-        }
-        builder.setNegativeButton("Schließen", null)
-        builder.show()
     }
 
     private fun toggleTheme() {
@@ -116,9 +109,9 @@ class ReportHistoryActivity : AppCompatActivity() {
             val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             
             holder.binding.tvDate.text = sdf.format(Date(report.timestamp))
-            holder.binding.tvTitle.text = report.title.ifEmpty { "Unbenannter Bericht" }
-            holder.binding.tvSummary.text = report.note.ifEmpty { "Keine Notiz vorhanden." }
-            holder.binding.tvImageCount.text = "${report.imagePaths.size} Bilder angehängt"
+            holder.binding.tvTitle.text = report.title.ifEmpty { getString(R.string.report_history_untitled) }
+            holder.binding.tvSummary.text = report.note.ifEmpty { getString(R.string.report_history_no_note) }
+            holder.binding.tvImageCount.text = getString(R.string.report_history_images_attached, report.imagePaths.size)
             
             holder.binding.root.setOnClickListener {
                 val intent = Intent(this@ReportHistoryActivity, DeviceReportActivity::class.java).apply {

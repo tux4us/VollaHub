@@ -74,11 +74,11 @@ class LocationShareService : Service(), LocationListener {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ServiceCompat.startForeground(
-                this, NOTIFICATION_ID, buildNotification("Standortfreigabe aktiv"),
+                this, NOTIFICATION_ID, buildNotification(getString(R.string.location_sharing_active_notification_title)),
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
             )
         } else {
-            startForeground(NOTIFICATION_ID, buildNotification("Standortfreigabe aktiv"))
+            startForeground(NOTIFICATION_ID, buildNotification(getString(R.string.location_sharing_active_notification_title)))
         }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -170,7 +170,7 @@ class LocationShareService : Service(), LocationListener {
         tempFile.delete()
 
         if (result.isSuccess) {
-            updateNotification("Zuletzt gesendet: ${formatTime(payload.timestamp)}")
+            updateNotification(getString(R.string.location_last_sent, formatTime(payload.timestamp)))
         }
     }
 
@@ -182,8 +182,8 @@ class LocationShareService : Service(), LocationListener {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(CHANNEL_ID, "Standortfreigabe", NotificationManager.IMPORTANCE_LOW).apply {
-                description = "Aktive Standortfreigabe im Hintergrund"
+            NotificationChannel(CHANNEL_ID, getString(R.string.location_sharing_channel_name), NotificationManager.IMPORTANCE_LOW).apply {
+                description = getString(R.string.location_sharing_channel_desc)
                 setShowBadge(false); setSound(null, null); enableVibration(false)
             }.also { notificationManager.createNotificationChannel(it) }
         }
@@ -191,7 +191,7 @@ class LocationShareService : Service(), LocationListener {
 
     private fun buildNotification(text: String) =
         NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("📍 Ortung aktiv")
+            .setContentTitle(getString(R.string.location_sharing_active_short))
             .setContentText(text)
             .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setOngoing(true).setSilent(true)

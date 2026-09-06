@@ -70,35 +70,35 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:text="🇩🇪 Deutsch" />
+                            android:text="@string/lang_flag_de" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/btnWikiEn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:text="🇬🇧 English" />
+                            android:text="@string/lang_flag_en" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/btnWikiCs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:text="🇨🇿 ČZ-SK" />
+                            android:text="@string/lang_flag_cs" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/btnWikiIt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:text="🇮🇹 Italiano" />
+                            android:text="@string/lang_flag_it" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/btnWikiEs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:text="🇪🇸 Español" />
+                            android:text="@string/lang_flag_es" />
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -123,7 +123,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Wähle deine Sprache:"
+                    android:text="@string/choose_your_language"
                     android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:gravity="center"
                     android:layout_marginBottom="16dp" />
@@ -134,7 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="4dp"
-                    android:text="🇩🇪 Forum Deutsch" />
+                    android:text="@string/forum_flag_de" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnForumEn"
@@ -142,7 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="4dp"
-                    android:text="🇬🇧 Forum English" />
+                    android:text="@string/forum_flag_en" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnForumEs"
@@ -150,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="4dp"
-                    android:text="🇪🇸 Foro Español" />
+                    android:text="@string/forum_flag_es" />
             </LinearLayout>
 
             <ProgressBar
@@ -177,7 +177,7 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="16dp"
                 android:layout_marginBottom="80dp"
-                android:text="Weitere Beiträge laden"
+                android:text="@string/load_more_posts"
                 android:visibility="gone" />
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

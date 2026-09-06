@@ -178,7 +178,7 @@ class SunburstChartView @JvmOverloads constructor(
         centerSubTextPaint.textSize = centerOval.width() * 0.11f
         val cx = centerOval.centerX()
         val cy = centerOval.centerY()
-        canvas.drawText(node.name.ifEmpty { "Speicher" }, cx, cy - 6f, centerTextPaint)
+        canvas.drawText(node.name.ifEmpty { context.getString(R.string.storage_root_label) }, cx, cy - 6f, centerTextPaint)
         canvas.drawText(formatBytes(node.sizeBytes), cx, cy + centerSubTextPaint.textSize + 2f, centerSubTextPaint)
     }
 

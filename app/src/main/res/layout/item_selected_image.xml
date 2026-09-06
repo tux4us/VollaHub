@@ -20,5 +20,5 @@
         android:layout_margin="4dp"
         android:background="@android:drawable/ic_delete"
         android:backgroundTint="#FF0000"
-        android:contentDescription="Entfernen" />
+        android:contentDescription="@string/remove" />
 </FrameLayout>

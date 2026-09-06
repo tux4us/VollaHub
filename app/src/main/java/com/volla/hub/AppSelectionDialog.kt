@@ -68,8 +68,8 @@ class AppSelectionDialog : DialogFragment() {
                 val name = pm.getApplicationLabel(appInfo).toString()
                 val packageName = appInfo.packageName
                 val version = try {
-                    pm.getPackageInfo(packageName, 0).versionName ?: "Unknown"
-                } catch (e: Exception) { "Unknown" }
+                    pm.getPackageInfo(packageName, 0).versionName ?: getString(R.string.app_version_unknown)
+                } catch (e: Exception) { getString(R.string.app_version_unknown) }
                 
                 SelectableApp(
                     info = AppInfo(name, packageName, version),

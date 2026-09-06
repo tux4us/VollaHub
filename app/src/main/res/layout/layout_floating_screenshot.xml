@@ -12,7 +12,7 @@
         android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@android:drawable/ic_menu_sort_by_size"
-        android:contentDescription="Long Screenshot" />
+        android:contentDescription="@string/long_screenshot" />
 
     <ImageButton
         android:id="@+id/btnFloatingClose"
@@ -20,6 +20,6 @@
         android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:contentDescription="Close" />
+        android:contentDescription="@string/content_desc_close" />
 
 </LinearLayout>

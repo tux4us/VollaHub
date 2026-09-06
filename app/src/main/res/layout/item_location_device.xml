@@ -41,7 +41,7 @@
                     android:id="@+id/tvDeviceLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unbekanntes Gerät"
+                    android:text="@string/unknown_device"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -49,7 +49,7 @@
                     android:id="@+id/tvDeviceStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Vor 2 Min"
+                    android:text="@string/last_seen_placeholder"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -63,7 +63,7 @@
                     android:id="@+id/tvDeviceDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-- km"
+                    android:text="@string/distance_placeholder"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -72,7 +72,7 @@
                     android:id="@+id/tvDeviceBattery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔋 --%"
+                    android:text="@string/battery_placeholder"
                     android:textSize="10sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -82,7 +82,7 @@
             android:id="@+id/tvDeviceCoords"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lat: --, Lon: --"
+            android:text="@string/lat_lon_placeholder"
             android:textSize="11sp"
             android:fontFamily="monospace"
             android:layout_marginBottom="12dp"
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="4dp"
-                android:text="🧭 Route"
+                android:text="@string/btn_route_emoji"
                 android:textSize="12sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
-                android:text="🔗 Teilen"
+                android:text="@string/btn_share_emoji"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

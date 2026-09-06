@@ -31,14 +31,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Screenshot Tool"
+                android:text="@string/screenshot_tool_title"
                 android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hier kannst du Screenshots und verlängerte Screenshots erstellen."
+                android:text="@string/screenshot_tool_desc"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:layout_marginBottom="24dp"/>
 
@@ -58,21 +58,21 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Anleitung"
+                        android:text="@string/screenshot_instructions_title"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1. Starte den Screenshot-Dienst.\n2. Wechsle zur gewünschten App.\n3. Nutze den schwebenden Button für Screenshots."/>
+                        android:text="@string/screenshot_instructions_body"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnStartService"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="Screenshot-Dienst starten"/>
+                        android:text="@string/btn_start_screenshot_service"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

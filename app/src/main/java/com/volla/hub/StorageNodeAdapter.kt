@@ -37,7 +37,7 @@ class StorageNodeAdapter(
             android.content.res.ColorStateList.valueOf(Color.parseColor(node.category.colorHex))
         holder.binding.colorDot.backgroundTintList =
             android.content.res.ColorStateList.valueOf(Color.parseColor(node.category.colorHex))
-        holder.binding.tvNodeCategory.text = node.category.displayName
+        holder.binding.tvNodeCategory.text = holder.binding.root.context.getString(node.category.displayNameRes)
         holder.binding.root.setOnClickListener {
             if (node.isDirectory) onClick(node)
         }

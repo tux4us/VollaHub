@@ -79,8 +79,8 @@ class RamChartView @JvmOverloads constructor(
         }
 
         // Draw X Axis Labels
-        canvas.drawText("-5 Min", 0f, h - 5f, textPaint)
-        canvas.drawText("Jetzt", chartW - 60f, h - 5f, textPaint)
+        canvas.drawText(context.getString(R.string.ram_chart_axis_5min_ago), 0f, h - 5f, textPaint)
+        canvas.drawText(context.getString(R.string.ram_chart_axis_now), chartW - 60f, h - 5f, textPaint)
 
         if (dataPoints.isEmpty()) return
 

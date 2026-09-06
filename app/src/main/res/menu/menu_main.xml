@@ -4,31 +4,39 @@
     <item
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home"
-        android:title="Startseite"
+        android:title="@string/menu_home"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Suche"
+        android:title="@string/menu_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
         android:id="@+id/action_refresh"
         android:icon="@android:drawable/ic_menu_rotate"
-        android:title="Aktualisieren"
+        android:title="@string/menu_refresh"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_report"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="Geräte-Report"
+        android:title="@string/menu_report"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_theme"
         android:icon="@android:drawable/ic_menu_day"
-        android:title="Theme wechseln"
+        android:title="@string/menu_theme_toggle"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_lang_de"
+        android:title="🇩🇪"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_lang_en"
+        android:title="🇬🇧"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_developer"
-        android:title="Appinfo"
+        android:title="@string/menu_appinfo"
         app:showAsAction="never" />
 </menu>

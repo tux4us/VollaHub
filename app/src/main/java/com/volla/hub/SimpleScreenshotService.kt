@@ -58,7 +58,7 @@ class SimpleScreenshotService : Service() {
         val channelId = "simple_screenshot_service"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelId, "Screenshot Service",
+                channelId, getString(R.string.screenshot_service_channel_name),
                 NotificationManager.IMPORTANCE_LOW
             )
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -67,15 +67,15 @@ class SimpleScreenshotService : Service() {
 
         val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(this, channelId)
-                .setContentTitle("Screenshot")
-                .setContentText("Screenshot wird erfasst...")
+                .setContentTitle(getString(R.string.screenshot_toolbar_title))
+                .setContentText(getString(R.string.screenshot_capturing))
                 .setSmallIcon(android.R.drawable.ic_menu_camera)
                 .build()
         } else {
             @Suppress("DEPRECATION")
             Notification.Builder(this)
-                .setContentTitle("Screenshot")
-                .setContentText("Screenshot wird erfasst...")
+                .setContentTitle(getString(R.string.screenshot_toolbar_title))
+                .setContentText(getString(R.string.screenshot_capturing))
                 .setSmallIcon(android.R.drawable.ic_menu_camera)
                 .getNotification()
         }
@@ -132,10 +132,10 @@ class SimpleScreenshotService : Service() {
                 saveBitmap(cleanBitmap)
                 bitmap.recycle()
                 
-                Toast.makeText(this, "Screenshot gespeichert", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.screenshot_saved), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this, "Fehler: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_generic, e.message), Toast.LENGTH_SHORT).show()
             } finally {
                 image.close()
                 stopSelf()
@@ -163,7 +163,7 @@ class SimpleScreenshotService : Service() {
                         val cleanBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height)
                         saveBitmap(cleanBitmap)
                         bitmap.recycle()
-                        Toast.makeText(this, "Screenshot gespeichert", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.screenshot_saved), Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     } finally {
@@ -171,7 +171,7 @@ class SimpleScreenshotService : Service() {
                         stopSelf()
                     }
                 } else {
-                    Toast.makeText(this, "Fehler: Frame konnte nicht erfasst werden", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.error_frame_capture), Toast.LENGTH_SHORT).show()
                     stopSelf()
                 }
             }, 200)

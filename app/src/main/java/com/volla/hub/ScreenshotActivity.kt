@@ -29,7 +29,7 @@ class ScreenshotActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Screenshot"
+        supportActionBar?.title = getString(R.string.screenshot_toolbar_title)
 
         projectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
 
@@ -56,17 +56,12 @@ class ScreenshotActivity : AppCompatActivity() {
         val enabled = isAccessibilityServiceEnabled()
         if (!enabled) {
             AlertDialog.Builder(this)
-                .setTitle("Langer Screenshot")
-                .setMessage(
-                    "Für automatisches Scrollen beim langen Screenshot muss einmalig ein " +
-                    "Eingabehilfen-Dienst aktiviert werden.\n\n" +
-                    "Einstellungen → Eingabehilfen → VollaHub Scroll-Dienst → Aktivieren\n\n" +
-                    "Normale Screenshots funktionieren sofort ohne diese Einstellung."
-                )
-                .setPositiveButton("Zu den Einstellungen") { _, _ ->
+                .setTitle(getString(R.string.long_screenshot))
+                .setMessage(getString(R.string.accessibility_hint_message))
+                .setPositiveButton(getString(R.string.btn_go_to_settings)) { _, _ ->
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 }
-                .setNegativeButton("Später", null)
+                .setNegativeButton(getString(R.string.btn_later), null)
                 .show()
             prefs.edit().putBoolean("accessibility_hint_shown", true).apply()
         }
@@ -109,7 +104,7 @@ class ScreenshotActivity : AppCompatActivity() {
                 ) {
                     startMediaProjection()
                 } else {
-                    Toast.makeText(this, "Overlay-Berechtigung wird benötigt", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.overlay_permission_needed), Toast.LENGTH_SHORT).show()
                 }
             }
             REQUEST_MEDIA_PROJECTION -> {
@@ -125,7 +120,7 @@ class ScreenshotActivity : AppCompatActivity() {
                     }
                     finish()
                 } else {
-                    Toast.makeText(this, "Berechtigung verweigert", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
                 }
             }
         }
