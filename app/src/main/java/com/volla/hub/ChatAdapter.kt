@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 
 class ChatAdapter(
-    private val onContentClick: (ContentItem) -> Unit
+    private val onContentClick: (ContentItem) -> Unit,
+    private val onActionClick: (ChatAction) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val messages = mutableListOf<ChatMessage>()
@@ -43,6 +45,8 @@ class ChatAdapter(
             holder.tvMessage.text = message.text
         } else if (holder is BotViewHolder) {
             holder.tvBotMessage.text = message.text
+            
+            // Content Results
             if (message.items.isNotEmpty()) {
                 holder.rvResults.visibility = View.VISIBLE
                 holder.rvResults.layoutManager = LinearLayoutManager(holder.itemView.context)
@@ -51,6 +55,23 @@ class ChatAdapter(
                 adapter.submitList(message.items)
             } else {
                 holder.rvResults.visibility = View.GONE
+            }
+
+            // Action Button
+            if (message.action != null) {
+                holder.btnAction.visibility = View.VISIBLE
+                holder.btnAction.text = when(message.action) {
+                    ChatAction.OPEN_LOCATION -> "Ortung öffnen"
+                    ChatAction.TAKE_SCREENSHOT -> "Screenshot machen"
+                    ChatAction.OPEN_STORAGE_ANALYSIS -> "Speicher-Analyse"
+                    ChatAction.CREATE_REPORT -> "Geräte-Report erstellen"
+                    ChatAction.OPEN_WIKI -> "Wiki öffnen"
+                    ChatAction.OPEN_FORUM -> "Forum öffnen"
+                    ChatAction.OPEN_BLOG -> "Blog lesen"
+                }
+                holder.btnAction.setOnClickListener { onActionClick(message.action) }
+            } else {
+                holder.btnAction.visibility = View.GONE
             }
         }
     }
@@ -64,5 +85,6 @@ class ChatAdapter(
     class BotViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvBotMessage: TextView = view.findViewById(R.id.tvBotMessage)
         val rvResults: RecyclerView = view.findViewById(R.id.rvResults)
+        val btnAction: MaterialButton = view.findViewById(R.id.btnAction)
     }
 }

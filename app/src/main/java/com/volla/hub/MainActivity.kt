@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
@@ -178,7 +177,8 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val articles = withContext(Dispatchers.IO) { vollaParser.parseWiki(title, lang) }
+                val searchResults = withContext(Dispatchers.IO) { vollaParser.searchWiki(title, lang) }
+                val articles = searchResults.sortedByDescending { it.second }.map { it.first }
                 allWikiArticles = articles
                 wikiAdapter.submitList(articles)
                 binding.progressBar.visibility = View.GONE

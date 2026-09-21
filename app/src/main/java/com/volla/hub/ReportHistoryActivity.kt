@@ -32,6 +32,11 @@ class ReportHistoryActivity : AppCompatActivity() {
         setupRecyclerView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupRecyclerView()
+    }
+
     private fun setupRecyclerView() {
         val reports = reportStorage.getAllReports()
         binding.rvHistory.layoutManager = LinearLayoutManager(this)

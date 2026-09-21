@@ -49,4 +49,15 @@ class ReportStorage(private val context: Context) {
         val reports = getAllReports().filter { it.id != reportId }
         file.writeText(gson.toJson(reports))
     }
+
+    fun updateReport(report: DeviceReport) {
+        val reports = getAllReports().toMutableList()
+        val index = reports.indexOfFirst { it.id == report.id }
+        if (index != -1) {
+            reports[index] = report
+        } else {
+            reports.add(0, report)
+        }
+        file.writeText(gson.toJson(reports))
+    }
 }

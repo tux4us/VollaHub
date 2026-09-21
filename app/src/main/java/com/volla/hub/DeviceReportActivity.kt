@@ -28,6 +28,7 @@ class DeviceReportActivity : AppCompatActivity() {
     private lateinit var imageAdapter: SelectedImageAdapter
     private lateinit var appAdapter: SelectedAppAdapter
     private lateinit var reportStorage: ReportStorage
+    private var currentReportId: String? = null
     private val handler = Handler(Looper.getMainLooper())
     private val ramSampler = object : Runnable {
         override fun run() {
@@ -86,6 +87,7 @@ class DeviceReportActivity : AppCompatActivity() {
         // Check if we are viewing an existing report
         intent.getStringExtra("report_json")?.let { json ->
             val report = com.google.gson.Gson().fromJson(json, DeviceReport::class.java)
+            currentReportId = report.id
             loadReportIntoFields(report)
             binding.btnNewReport.visibility = View.VISIBLE
         }
@@ -113,6 +115,7 @@ class DeviceReportActivity : AppCompatActivity() {
     private fun resetToNewReport() {
         binding.etNoteTitle.setText("")
         binding.etNoteContent.setText("")
+        currentReportId = null
         selectedImages.clear()
         imageAdapter.setImages(selectedImages)
         selectedApps.clear()
@@ -281,6 +284,7 @@ class DeviceReportActivity : AppCompatActivity() {
     }
 
     private fun shareReport() {
+        saveReportToStorage()
         val reportText = getFullReportText()
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
@@ -291,20 +295,30 @@ class DeviceReportActivity : AppCompatActivity() {
     }
 
     private fun saveAndStoreReport() {
+        val report = saveReportToStorage()
+        saveAsPdf(report)
+    }
+
+    private fun saveReportToStorage(): DeviceReport {
         val internalImagePaths = mutableListOf<String>()
         selectedImages.forEachIndexed { index, uri ->
             try {
-                val inputStream = contentResolver.openInputStream(uri)
-                val file = File(filesDir, "report_img_${System.currentTimeMillis()}_$index.jpg")
-                val outputStream = FileOutputStream(file)
-                inputStream?.copyTo(outputStream)
-                inputStream?.close()
-                outputStream.close()
-                internalImagePaths.add(file.absolutePath)
+                if (uri.scheme == "file" && uri.path?.contains(filesDir.absolutePath) == true) {
+                    internalImagePaths.add(uri.path!!)
+                } else {
+                    val inputStream = contentResolver.openInputStream(uri)
+                    val file = File(filesDir, "report_img_${System.currentTimeMillis()}_$index.jpg")
+                    val outputStream = FileOutputStream(file)
+                    inputStream?.copyTo(outputStream)
+                    inputStream?.close()
+                    outputStream.close()
+                    internalImagePaths.add(file.absolutePath)
+                }
             } catch (e: Exception) { e.printStackTrace() }
         }
 
         val report = DeviceReport(
+            id = currentReportId ?: UUID.randomUUID().toString(),
             title = binding.etNoteTitle.text.toString(),
             note = binding.etNoteContent.text.toString(),
             specs = binding.tvDeviceSpecs.text.toString(),
@@ -314,8 +328,15 @@ class DeviceReportActivity : AppCompatActivity() {
             imagePaths = internalImagePaths,
             selectedApps = ArrayList(selectedApps)
         )
-        reportStorage.saveReport(report)
-        saveAsPdf(report)
+        
+        if (currentReportId == null) {
+            reportStorage.saveReport(report)
+        } else {
+            reportStorage.updateReport(report)
+        }
+        
+        currentReportId = report.id
+        return report
     }
 
     private fun saveAsPdf(report: DeviceReport) {
@@ -428,6 +449,9 @@ class DeviceReportActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.action_search)?.isVisible = false
+        menu.findItem(R.id.action_refresh)?.isVisible = false
+        menu.findItem(R.id.action_report)?.isVisible = false
         return true
     }
 
@@ -435,6 +459,11 @@ class DeviceReportActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 finish()
+                true
+            }
+            R.id.action_save -> {
+                saveReportToStorage()
+                Toast.makeText(this, getString(R.string.save), Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.action_home -> {

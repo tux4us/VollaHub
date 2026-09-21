@@ -1,6 +1,9 @@
 package com.volla.hub
 
+import android.util.Log
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import java.net.URLEncoder
 
 data class ContentItem(
     val title: String,
@@ -18,7 +21,7 @@ class VollaParser {
         val pages = mutableListOf<ContentItem>()
 
         try {
-            android.util.Log.d("VollaParser", "Lade Volla Online Seiten ($lang)...")
+            Log.d("VollaParser", "Lade Volla Online Seiten ($lang)...")
             val doc = Jsoup.connect("$baseUrl/$lang/")
                 .userAgent("Mozilla/5.0")
                 .timeout(15000)
@@ -40,11 +43,10 @@ class VollaParser {
                     seenUrls.add(href)
                     val level = calculateLevel(link)
                     pages.add(ContentItem(title, href, "", "", level))
-                    android.util.Log.d("VollaParser", "Seite: $title")
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("VollaParser", "Fehler: ${e.message}")
+            Log.e("VollaParser", "Fehler: ${e.message}")
         }
 
         return pages.sortedBy { it.level }
@@ -54,18 +56,14 @@ class VollaParser {
         val posts = mutableListOf<ContentItem>()
 
         try {
-            android.util.Log.d("VollaParser", "Lade Blog ($lang)...")
+            Log.d("VollaParser", "Lade Blog ($lang)...")
             val doc = Jsoup.connect("$baseUrl/$lang/blog/")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                 .timeout(30000)
                 .followRedirects(true)
                 .get()
 
-            android.util.Log.d("VollaParser", "Blog-Seite geladen: ${doc.title()}")
-
             val blogEntries = doc.select("div.blog-entry")
-            android.util.Log.d("VollaParser", "Gefundene Blog-Einträge: ${blogEntries.size}")
-
             for (entry in blogEntries) {
                 val title = entry.select("h1").firstOrNull()?.text() ?: continue
                 val linkElem = entry.select("a[href]").firstOrNull()
@@ -88,131 +86,124 @@ class VollaParser {
                 val excerpt = entry.select(".blog-entry-body p").firstOrNull()?.text()?.take(150) ?: ""
 
                 posts.add(ContentItem(title, finalUrl, excerpt, date))
-                android.util.Log.d("VollaParser", "Blog-Beitrag: $title -> $finalUrl")
             }
-
-            android.util.Log.d("VollaParser", "${posts.size} Blog-Beiträge gefunden")
         } catch (e: Exception) {
-            android.util.Log.e("VollaParser", "Fehler beim Blog-Laden: ${e.message}")
+            Log.e("VollaParser", "Fehler beim Blog-Laden: ${e.message}")
         }
 
         return posts
     }
 
-    suspend fun parseWiki(pageName: String, lang: String = "de"): List<ContentItem> {
-        val articles = mutableListOf<ContentItem>()
-
-        try {
-            android.util.Log.d("VollaParser", "Lade Wiki ($lang): $pageName...")
-            val doc = Jsoup.connect("$wikiBaseUrl/index.php?title=$pageName")
-                .userAgent("Mozilla/5.0")
-                .timeout(15000)
-                .get()
-
-            articles.add(
-                ContentItem(
-                    pageName.replace("%C4%8C", "Č").replace("%C3%A1", "á").replace("%C3%B1", "ñ"),
-                    "$wikiBaseUrl/index.php?title=$pageName"
-                )
-            )
-
-            val links = doc.select("a[href*='index.php?title=']")
-            val seenTitles = mutableSetOf(pageName)
-
-            for (link in links) {
-                val href = link.attr("abs:href")
-                val title = link.text()
-
-                if (href.contains("index.php?title=") &&
-                    !href.contains("Spezial:") &&
-                    !href.contains("Diskussion:") &&
-                    !href.contains("action=") &&
-                    !href.contains("&") &&
-                    title.isNotEmpty() &&
-                    title !in seenTitles
-                ) {
-                    seenTitles.add(title)
-                    articles.add(ContentItem(title, href))
-                    android.util.Log.d("VollaParser", "Wiki-Artikel: $title")
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("VollaParser", "Fehler: ${e.message}")
-        }
-
-        return articles
+    private fun extractKeywords(query: String): List<String> {
+        val stopWords = setOf(
+            "wie", "kann", "ich", "einen", "machen", "der", "die", "das", "ein", "eine", "und", "ist", "sind", "mit", "für", "von", "auf", "zu", "mir", "mich", "dir", "dich", "habe", "hast", "hat", "hatte", "wird", "werden",
+            "how", "can", "i", "a", "an", "the", "and", "is", "are", "with", "for", "from", "on", "to", "do", "does", "did", "my", "me", "you", "your", "have", "has", "had", "will", "be",
+            "bitte", "gerne", "hallo", "servus", "moin", "frage", "antwort", "suche", "hilfe", "info", "information", "man", "jemand", "könnte", "würde",
+            "richte", "einrichten", "geht", "wurde", "worden", "habe", "hat", "hast", "hatte", "bin", "bist", "war", "waren", "gemacht", "getan"
+        )
+        return query.lowercase()
+            .replace(Regex("[^a-z0-9äöüß\\s]"), " ")
+            .split(Regex("\\s+"))
+            .filter { it.length > 2 && it !in stopWords }
     }
 
-    suspend fun searchWiki(query: String, lang: String = "de"): List<ContentItem> {
-        val results = mutableListOf<ContentItem>()
+    private fun calculateScore(title: String, text: String, keywords: List<String>): Int {
+        var score = 0
+        val lowerTitle = title.lowercase()
+        val lowerText = text.lowercase()
+        
+        for (kw in keywords) {
+            // Exakter Treffer als ganzes Wort im Titel (höchste Gewichtung)
+            if (lowerTitle.contains(Regex("\\b$kw\\b"))) {
+                score += 50
+            } else if (lowerTitle.contains(kw)) {
+                score += 20
+            }
+            
+            // Exakter Treffer als ganzes Wort im Text (mittlere Gewichtung)
+            if (lowerText.contains(Regex("\\b$kw\\b"))) {
+                score += 10
+            } else if (lowerText.contains(kw)) {
+                score += 2
+            }
+        }
+        return score
+    }
+
+    suspend fun searchWiki(query: String, lang: String = "de"): List<Pair<ContentItem, Int>> {
+        val keywords = extractKeywords(query)
+        if (keywords.isEmpty()) return emptyList()
+        val searchQuery = keywords.joinToString(" ")
+        
+        val results = mutableListOf<Pair<ContentItem, Int>>()
         try {
-            val url = "$wikiBaseUrl/index.php?search=${java.net.URLEncoder.encode(query, "UTF-8")}&title=Spezial:Suche&fulltext=1"
+            val url = "$wikiBaseUrl/index.php?search=${URLEncoder.encode(searchQuery, "UTF-8")}&title=Spezial:Suche&fulltext=1"
             val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
             
-            val searchResults = doc.select("li.mw-search-result")
+            val searchResults = doc.select(".mw-search-result")
             for (result in searchResults) {
                 val link = result.select("a").first()
                 val title = link?.text() ?: ""
                 val href = link?.attr("abs:href") ?: ""
                 
-                // Filter basierend auf Sprache
-                if (lang == "de") {
-                    if (href.contains("/en/") || title.contains("(en)", ignoreCase = true) || title.startsWith("En/")) {
-                        continue
-                    }
-                }
-                // Für Englisch (lang == "en") lassen wir vorerst alle Ergebnisse zu,
-                // da das Wiki vorwiegend deutschsprachig ist und wir so mehr Treffer liefern.
+                if (href.isEmpty() || title.isEmpty() || title.startsWith("Spezial:") || title.startsWith("Datei:")) continue
+                
+                // Sprachfilter für Wiki
+                if (lang == "de" && (href.contains("/en/") || title.contains("(en)", ignoreCase = true) || title.startsWith("En/"))) continue
 
                 val excerpt = result.select(".searchresult").text()
-                results.add(ContentItem(title, href, excerpt))
+                val score = calculateScore(title, excerpt, keywords)
+                
+                if (score > 0) results.add(ContentItem(title, href, excerpt) to score)
             }
         } catch (e: Exception) {
-            android.util.Log.e("VollaParser", "Wiki Search Error: ${e.message}")
+            Log.e("VollaParser", "Wiki Search Error: ${e.message}")
         }
         return results
     }
 
-    suspend fun searchForum(query: String, lang: String = "de"): List<ContentItem> {
-        val results = mutableListOf<ContentItem>()
+    suspend fun searchForum(query: String, lang: String = "de"): List<Pair<ContentItem, Int>> {
+        val keywords = extractKeywords(query)
+        if (keywords.isEmpty()) return emptyList()
+        val searchQuery = keywords.joinToString(" ")
+
+        val results = mutableListOf<Pair<ContentItem, Int>>()
         try {
-            // Forum IDs: DE=94, EN=26, ES=119
             val fid = when(lang) {
                 "en" -> 26
                 "es" -> 119
                 else -> 94
             }
-            val url = "https://forum.volla.online/search.php?keywords=${java.net.URLEncoder.encode(query, "UTF-8")}&fid[]=$fid"
+            val url = "https://forum.volla.online/search.php?keywords=${URLEncoder.encode(searchQuery, "UTF-8")}&fid[]=$fid"
             val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
             
             val topics = doc.select(".search.post") 
             for (topic in topics) {
                 val links = topic.select("a[href]")
-                val bestLink = links.find { it.hasClass("topictitle") } 
-                    ?: links.find { it.parent()?.tagName() == "h3" }
-                    ?: links.find { 
-                        val href = it.attr("href")
-                        !href.contains("u=") && !href.contains("viewprofile") && !href.contains("memberlist")
-                    }
-
+                val bestLink = links.find { it.hasClass("topictitle") } ?: links.firstOrNull()
                 val title = bestLink?.text() ?: ""
                 val href = bestLink?.attr("abs:href") ?: ""
                 val excerpt = topic.select(".postbody").text().take(200)
                 
                 if (href.isNotEmpty() && title.isNotEmpty()) {
-                    results.add(ContentItem(title, href, excerpt))
+                    val score = calculateScore(title, excerpt, keywords)
+                    if (score > 0) results.add(ContentItem(title, href, excerpt) to score)
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("VollaParser", "Forum Search Error: ${e.message}")
+            Log.e("VollaParser", "Forum Search Error: ${e.message}")
         }
         return results
     }
 
-    suspend fun searchOnline(query: String, lang: String = "de"): List<ContentItem> {
-        val results = mutableListOf<ContentItem>()
+    suspend fun searchOnline(query: String, lang: String = "de"): List<Pair<ContentItem, Int>> {
+        val keywords = extractKeywords(query)
+        if (keywords.isEmpty()) return emptyList()
+        val searchQuery = keywords.joinToString(" ")
+
+        val results = mutableListOf<Pair<ContentItem, Int>>()
         try {
-            val url = "$baseUrl/$lang/?s=${java.net.URLEncoder.encode(query, "UTF-8")}"
+            val url = "$baseUrl/$lang/?s=${URLEncoder.encode(searchQuery, "UTF-8")}"
             val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
             
             val articles = doc.select("article, .post, .entry")
@@ -223,24 +214,108 @@ class VollaParser {
                 val excerpt = article.select("p").first()?.text()?.take(200) ?: ""
                 
                 if (href.isNotEmpty() && title.isNotEmpty()) {
-                    results.add(ContentItem(title, href, excerpt))
+                    val score = calculateScore(title, excerpt, keywords)
+                    if (score > 0) results.add(ContentItem(title, href, excerpt) to score)
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("VollaParser", "Online Search Error: ${e.message}")
+            Log.e("VollaParser", "Online Search Error: ${e.message}")
         }
         return results
     }
 
-    private fun calculateLevel(link: org.jsoup.nodes.Element): Int {
+    suspend fun searchFaqs(query: String, lang: String = "de"): List<Pair<ContentItem, Int>> {
+        val results = mutableListOf<Pair<ContentItem, Int>>()
+        try {
+            val url = "$baseUrl/$lang/faqs/"
+            val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
+            val faqItems = doc.select("li[id^=FAQ-item]")
+            
+            val keywords = extractKeywords(query)
+            if (keywords.isEmpty()) return emptyList()
+            
+            for (item in faqItems) {
+                val question = item.select(".faq-question-text").text()
+                val answer = item.select(".faq-answer").text()
+                val score = calculateScore(question, answer, keywords)
+                
+                if (score > 0) {
+                    val itemId = item.attr("id")
+                    val link = "$baseUrl/$lang/faqs/#$itemId" 
+                    results.add(ContentItem("FAQ: $question", link, answer.take(200)) to score)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("VollaParser", "FAQ Search Error: ${e.message}")
+        }
+        return results
+    }
+
+    suspend fun searchDownloads(query: String, lang: String = "de"): List<Pair<ContentItem, Int>> {
+        val results = mutableListOf<Pair<ContentItem, Int>>()
+        try {
+            val url = "$baseUrl/$lang/faqs/downloads/"
+            val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
+            val downloadItems = doc.select(".filesharing-item")
+            
+            val keywords = extractKeywords(query)
+            if (keywords.isEmpty()) return emptyList()
+            
+            for (item in downloadItems) {
+                val linkElem = item.select(".filesharing-item-title a")
+                val title = linkElem.text()
+                val href = linkElem.attr("abs:href")
+                val description = item.select(".filesharing-item-description").text()
+                val score = calculateScore(title, description, keywords)
+                
+                if (score > 0) {
+                    results.add(ContentItem("Download: $title", href, description.take(200)) to score)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("VollaParser", "Download Search Error: ${e.message}")
+        }
+        return results
+    }
+
+    suspend fun searchUbports(query: String): List<Pair<ContentItem, Int>> {
+        val results = mutableListOf<Pair<ContentItem, Int>>()
+        try {
+            val url = "https://docs.ubports.com/en/latest/"
+            val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
+            val links = doc.select("a[href]")
+            
+            val keywords = extractKeywords(query)
+            if (keywords.isEmpty()) return emptyList()
+            
+            val seenUrls = mutableSetOf<String>()
+
+            for (link in links) {
+                val title = link.text()
+                val href = link.attr("abs:href")
+                
+                if (href.startsWith("https://docs.ubports.com/") && href !in seenUrls) {
+                    val score = calculateScore(title, "", keywords)
+                    
+                    if (score > 0) {
+                        seenUrls.add(href)
+                        results.add(ContentItem("UBports: $title", href, "Dokumentation für Ubuntu Touch") to score)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("VollaParser", "UBports Search Error: ${e.message}")
+        }
+        return results
+    }
+
+    private fun calculateLevel(link: Element): Int {
         var level = 0
         var parent = link.parent()
-
         while (parent != null) {
             if (parent.tagName() == "ul" || parent.tagName() == "ol") level++
             parent = parent.parent()
         }
-
         return level.coerceAtMost(3)
     }
 }
