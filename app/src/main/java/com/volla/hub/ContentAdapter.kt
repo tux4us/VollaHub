@@ -37,14 +37,17 @@ class ContentAdapter(
             val paddingStart = (item.level * 24).coerceAtMost(72)
             binding.root.setPadding(paddingStart, 16, 16, 16)
 
-            binding.titleText.text = item.title
-            binding.excerptText.text = if (item.excerpt.isNotEmpty()) item.excerpt
+            binding.titleText.text = stripHtml(item.title)
+            binding.excerptText.text = if (item.excerpt.isNotEmpty()) stripHtml(item.excerpt)
             else if (item.date.isNotEmpty()) item.date
             else ""
 
             binding.excerptText.visibility = if (binding.excerptText.text.isEmpty())
                 android.view.View.GONE else android.view.View.VISIBLE
         }
+
+        private fun stripHtml(input: String): String =
+            org.jsoup.Jsoup.parse(input).text()
     }
 
     class DiffCallback : DiffUtil.ItemCallback<ContentItem>() {

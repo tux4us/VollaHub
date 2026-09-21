@@ -50,6 +50,7 @@
     <string name="chat_error">Oje, bei der Suche ist etwas schiefgelaufen. Bitte versuche es gleich nochmal.</string>
 
     <!-- Social Media -->
+    <string name="social_dialog_subtitle">Folge Volla und bleib auf dem Laufenden</string>
     <string name="social_telegram">VollaCommunity auf Telegram</string>
     <string name="social_x">Volla auf X</string>
     <string name="social_facebook">Volla auf Facebook</string>

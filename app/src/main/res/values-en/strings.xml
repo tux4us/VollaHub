@@ -50,6 +50,7 @@
     <string name="chat_error">Oops, something went wrong with the search. Please try again shortly.</string>
 
     <!-- Social Media -->
+    <string name="social_dialog_subtitle">Follow Volla and stay up to date</string>
     <string name="social_telegram">VollaCommunity on Telegram</string>
     <string name="social_x">Volla on X</string>
     <string name="social_facebook">Volla on Facebook</string>

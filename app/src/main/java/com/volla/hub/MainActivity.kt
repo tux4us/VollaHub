@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.volla.hub.databinding.ActivityMainBinding
+import com.volla.hub.databinding.DialogSocialMediaBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -79,6 +81,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.wikiRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.wikiRecyclerView.adapter = wikiAdapter
+
+        applyBottomNavPadding()
+    }
+
+    /**
+     * Sorgt dafür, dass das letzte Listenelement nicht von der BottomNavigationView
+     * verdeckt wird. Die feste "paddingBottom=100dp" im Layout reicht auf manchen
+     * Geräten nicht aus (z.B. bei zusätzlicher Geräte-Navigationsleiste), daher wird
+     * hier die tatsächlich gerenderte Höhe der BottomNavigationView gemessen und als
+     * zusätzliches Bottom-Padding auf die Listen angewendet.
+     */
+    private fun applyBottomNavPadding() {
+        binding.bottomNavigation.post {
+            val extraPadding = binding.bottomNavigation.height
+            if (extraPadding <= 0) return@post
+
+            listOf(binding.onlineRecyclerView, binding.blogRecyclerView, binding.wikiRecyclerView).forEach { rv ->
+                rv.setPadding(rv.paddingLeft, rv.paddingTop, rv.paddingRight, extraPadding + rv.paddingBottom)
+            }
+        }
     }
 
     private fun setupNavigation() {
@@ -177,8 +199,7 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val searchResults = withContext(Dispatchers.IO) { vollaParser.searchWiki(title, lang) }
-                val articles = searchResults.sortedByDescending { it.second }.map { it.first }
+                val articles = withContext(Dispatchers.IO) { vollaParser.loadPageLinks(title) }
                 allWikiArticles = articles
                 wikiAdapter.submitList(articles)
                 binding.progressBar.visibility = View.GONE
@@ -315,32 +336,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSocialMediaDialog() {
-        val platforms = arrayOf(
-            getString(R.string.social_telegram),
-            getString(R.string.social_x),
-            getString(R.string.social_facebook),
-            getString(R.string.social_instagram),
-            getString(R.string.social_mastodon)
-        )
-        val urls = arrayOf(
-            "https://t.me/hello_volla",
-            "https://x.com/hello_volla",
-            "https://www.facebook.com/hellovolla",
-            "https://www.instagram.com/hello_volla",
-            "https://mastodon.social/@volla"
+        val platforms = listOf(
+            SocialPlatform(getString(R.string.social_telegram), "https://t.me/hello_volla", R.drawable.ic_social_telegram),
+            SocialPlatform(getString(R.string.social_x), "https://x.com/hello_volla", R.drawable.ic_social_x),
+            SocialPlatform(getString(R.string.social_facebook), "https://www.facebook.com/hellovolla", R.drawable.ic_social_facebook),
+            SocialPlatform(getString(R.string.social_instagram), "https://www.instagram.com/hello_volla", R.drawable.ic_social_instagram),
+            SocialPlatform(getString(R.string.social_mastodon), "https://mastodon.social/@volla", R.drawable.ic_social_mastodon),
         )
 
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.nav_social)
-            .setItems(platforms) { _, which ->
-                val url = urls[which]
-                try {
-                    val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    openUrl(url, platforms[which])
-                }
+        val dialogBinding = DialogSocialMediaBinding.inflate(layoutInflater)
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogBinding.root)
+            .create()
+
+        dialogBinding.socialRecyclerView.layoutManager = LinearLayoutManager(this)
+        dialogBinding.socialRecyclerView.adapter = SocialPlatformAdapter(platforms) { platform ->
+            dialog.dismiss()
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(platform.url))
+                startActivity(intent)
+            } catch (e: Exception) {
+                openUrl(platform.url, platform.name)
             }
-            .show()
+        }
+
+        dialog.show()
     }
 }
