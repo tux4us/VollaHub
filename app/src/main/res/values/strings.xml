@@ -283,4 +283,33 @@
     <string name="storage_category_other">Sonstiges</string>
     <string name="storage_category_free">Frei</string>
     <string name="app_version_unknown">Unbekannt</string>
+
+    <!-- App-Cache-Übersicht -->
+    <string name="storage_tab_folders">Ordner</string>
+    <string name="storage_tab_app_caches">App-Caches</string>
+    <string name="app_cache_permission_title">Nutzungszugriff erforderlich</string>
+    <string name="app_cache_permission_desc">Um die Cache-Größe installierter Apps anzuzeigen, benötigt VollaHub den Zugriff auf Nutzungsdaten. Es werden keine Nutzungszeiten oder Inhalte ausgelesen – nur Speichergrößen.</string>
+    <string name="btn_grant_usage_access">Zugriff erteilen</string>
+    <string name="app_cache_scanning">Ermittle Cache-Größen…</string>
+    <string name="app_cache_total_summary">Gesamter App-Cache: %s auf %d Apps verteilt</string>
+    <string name="app_cache_empty">Keine Apps mit nennenswertem Cache gefunden.</string>
+    <string name="app_cache_list_hint">Tippe auf eine App, um deren Cache in den Systemeinstellungen zu leeren.</string>
+    <string name="own_cache_card_title">VollaHub-eigener Cache</string>
+    <string name="own_cache_card_size">Aktuell belegt: %s</string>
+    <string name="btn_clear_own_cache">Eigenen Cache leeren</string>
+    <string name="own_cache_cleared">VollaHub-Cache geleert (%s freigegeben)</string>
+    <string name="own_cache_already_empty">VollaHub-Cache ist bereits leer</string>
+    <string name="dialog_clear_own_cache_title">Eigenen Cache leeren?</string>
+    <string name="dialog_clear_own_cache_message">Temporäre VollaHub-Dateien (%s) werden gelöscht. Dies betrifft keine deiner Berichte, Fotos oder Einstellungen.</string>
+    <string name="btn_confirm_delete">Löschen</string>
+    <string name="btn_cancel">Abbrechen</string>
+
+    <!-- Long-Press-Löschen (Ordner/Dateien in der Speicheranalyse) -->
+    <string name="dialog_delete_folder_title">Ordner löschen?</string>
+    <string name="dialog_delete_file_title">Datei löschen?</string>
+    <string name="dialog_delete_folder_message">%1$s (%2$s) und der gesamte Inhalt werden unwiderruflich gelöscht.</string>
+    <string name="dialog_delete_file_message">%1$s (%2$s) wird unwiderruflich gelöscht.</string>
+    <string name="dialog_delete_protected_warning">Hinweis: Dieser Pfad gehört zu App-eigenen Daten (Android/data bzw. Android/obb). Android verweigert das Löschen dort in der Regel auch ohne Root – der Vorgang kann fehlschlagen oder unvollständig bleiben.</string>
+    <string name="node_deleted_toast">%s gelöscht</string>
+    <string name="node_delete_failed_toast">Löschen von %s fehlgeschlagen oder unvollständig</string>
 </resources>

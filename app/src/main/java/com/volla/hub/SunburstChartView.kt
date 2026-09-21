@@ -27,6 +27,7 @@ class SunburstChartView @JvmOverloads constructor(
     private var currentNode: StorageNode? = null
     var onSegmentTapped: ((StorageNode) -> Unit)? = null
     var onCenterTapped: (() -> Unit)? = null
+    var onSegmentLongPressed: ((StorageNode) -> Unit)? = null
 
     private data class Segment(val node: StorageNode, val startAngle: Float, val sweepAngle: Float, val ring: Int)
     private val innerSegments = mutableListOf<Segment>()
@@ -58,6 +59,10 @@ class SunburstChartView @JvmOverloads constructor(
             handleTap(e.x, e.y)
             return true
         }
+
+        override fun onLongPress(e: MotionEvent) {
+            handleLongPress(e.x, e.y)
+        }
     })
 
     fun setRootNode(node: StorageNode) {
@@ -88,6 +93,30 @@ class SunburstChartView @JvmOverloads constructor(
             dist <= centerRadius -> onCenterTapped?.invoke()
             dist <= innerRadius -> findSegmentAt(innerSegments, angle)?.let { onSegmentTapped?.invoke(it.node) }
             dist <= outerRadius -> findSegmentAt(outerSegments, angle)?.let { onSegmentTapped?.invoke(it.node) }
+        }
+    }
+
+    private fun handleLongPress(x: Float, y: Float) {
+        val cx = width / 2f
+        val cy = height / 2f
+        val dx = x - cx
+        val dy = y - cy
+        val dist = hypot(dx.toDouble(), dy.toDouble()).toFloat()
+        var angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat()
+        if (angle < -90f) angle += 360f
+
+        val innerRadius = innerOval.width() / 2f
+        val outerRadius = outerOval.width() / 2f
+        val centerRadius = centerOval.width() / 2f
+
+        // Long-Press im Zentrum löst absichtlich nichts aus: das Zentrum zeigt den
+        // gerade angezeigten Ordner selbst (nicht eines seiner Kinder) – dessen
+        // eigenen Elternordner per versehentlichem Long-Press löschbar zu machen
+        // wäre zu riskant.
+        when {
+            dist <= centerRadius -> return
+            dist <= innerRadius -> findSegmentAt(innerSegments, angle)?.let { onSegmentLongPressed?.invoke(it.node) }
+            dist <= outerRadius -> findSegmentAt(outerSegments, angle)?.let { onSegmentLongPressed?.invoke(it.node) }
         }
     }
 

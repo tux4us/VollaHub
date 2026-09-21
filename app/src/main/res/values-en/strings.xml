@@ -284,4 +284,33 @@
     <string name="storage_category_other">Other</string>
     <string name="storage_category_free">Free</string>
     <string name="app_version_unknown">Unknown</string>
+
+    <!-- App cache overview -->
+    <string name="storage_tab_folders">Folders</string>
+    <string name="storage_tab_app_caches">App Caches</string>
+    <string name="app_cache_permission_title">Usage access required</string>
+    <string name="app_cache_permission_desc">To show the cache size of installed apps, VollaHub needs access to usage data. No usage times or content are read – only storage sizes.</string>
+    <string name="btn_grant_usage_access">Grant Access</string>
+    <string name="app_cache_scanning">Determining cache sizes…</string>
+    <string name="app_cache_total_summary">Total app cache: %s across %d apps</string>
+    <string name="app_cache_empty">No apps with a significant cache were found.</string>
+    <string name="app_cache_list_hint">Tap an app to clear its cache in the system settings.</string>
+    <string name="own_cache_card_title">VollaHub\'s own cache</string>
+    <string name="own_cache_card_size">Currently used: %s</string>
+    <string name="btn_clear_own_cache">Clear own cache</string>
+    <string name="own_cache_cleared">VollaHub cache cleared (%s freed)</string>
+    <string name="own_cache_already_empty">VollaHub cache is already empty</string>
+    <string name="dialog_clear_own_cache_title">Clear own cache?</string>
+    <string name="dialog_clear_own_cache_message">Temporary VollaHub files (%s) will be deleted. This does not affect any of your reports, photos, or settings.</string>
+    <string name="btn_confirm_delete">Delete</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <!-- Long-press delete (folders/files in storage analysis) -->
+    <string name="dialog_delete_folder_title">Delete folder?</string>
+    <string name="dialog_delete_file_title">Delete file?</string>
+    <string name="dialog_delete_folder_message">%1$s (%2$s) and all of its contents will be permanently deleted.</string>
+    <string name="dialog_delete_file_message">%1$s (%2$s) will be permanently deleted.</string>
+    <string name="dialog_delete_protected_warning">Note: This path belongs to app-owned data (Android/data or Android/obb). Android usually denies deletion here even without root – the operation may fail or remain incomplete.</string>
+    <string name="node_deleted_toast">%s deleted</string>
+    <string name="node_delete_failed_toast">Failed to delete %s, or deletion was incomplete</string>
 </resources>

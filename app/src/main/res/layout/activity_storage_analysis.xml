@@ -16,6 +16,22 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="?attr/colorOnPrimary" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/storage_tab_folders" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/storage_tab_app_caches" />
+        </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -30,75 +46,223 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <com.google.android.material.card.MaterialCardView
+            <!-- Tab 1: Ordner-Aufschlüsselung (Sunburst) -->
+            <LinearLayout
+                android:id="@+id/folderTabContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                android:orientation="vertical">
 
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/tvSummary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            tools:text="12 GB von 64 GB belegt (18%) · 52 GB frei" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/progressOverall"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:trackThickness="8dp"
+                            app:trackCornerRadius="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvBreadcrumb"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorPrimary"
+                            tools:text="Speicher / Android / data" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnUpOneLevel"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/btn_up_one_level"
+                            android:visibility="gone"
+                            app:icon="@android:drawable/arrow_up_float"
+                            app:iconGravity="textStart" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.volla.hub.SunburstChartView
+                    android:id="@+id/sunburstChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginBottom="16dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvStorageNodes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRescan"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/btn_rescan" />
+            </LinearLayout>
+
+            <!-- Tab 2: App-Cache-Übersicht -->
+            <LinearLayout
+                android:id="@+id/appCacheTabContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Eigener VollaHub-Cache: direkt löschbar -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/own_cache_card_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                        <TextView
+                            android:id="@+id/tvOwnCacheSize"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            tools:text="Aktuell belegt: 8.4 MB" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnClearOwnCache"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/btn_clear_own_cache" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Hinweis: Nutzungszugriff fehlt -->
                 <LinearLayout
+                    android:id="@+id/usageAccessPermissionLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@null"
+                        android:src="@android:drawable/ic_dialog_alert"
+                        app:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/app_cache_permission_title"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/app_cache_permission_desc"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGrantUsageAccess"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/btn_grant_usage_access" />
+                </LinearLayout>
+
+                <!-- App-Cache-Liste -->
+                <LinearLayout
+                    android:id="@+id/appCacheListLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/tvSummary"
+                        android:id="@+id/tvAppCacheTotal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
-                        tools:text="12 GB von 64 GB belegt (18%) · 52 GB frei" />
-
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/progressOverall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:trackThickness="8dp"
-                        app:trackCornerRadius="4dp" />
+                        android:textStyle="bold"
+                        tools:text="Gesamter App-Cache: 1.2 GB auf 84 Apps verteilt" />
 
                     <TextView
-                        android:id="@+id/tvBreadcrumb"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
-                        android:textColor="?attr/colorPrimary"
-                        tools:text="Speicher / Android / data" />
+                        android:layout_marginBottom="12dp"
+                        android:alpha="0.7"
+                        android:text="@string/app_cache_list_hint"
+                        android:textAppearance="?attr/textAppearanceLabelMedium" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnUpOneLevel"
-                        style="@style/Widget.Material3.Button.TonalButton"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAppCaches"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/btn_up_one_level"
-                        android:visibility="gone"
-                        app:icon="@android:drawable/arrow_up_float"
-                        app:iconGravity="textStart" />
+                        android:nestedScrollingEnabled="false" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <com.volla.hub.SunburstChartView
-                android:id="@+id/sunburstChart"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginBottom="16dp" />
+                <ProgressBar
+                    android:id="@+id/appCacheScanSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24dp"
+                    android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvStorageNodes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRescan"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/btn_rescan" />
+                <TextView
+                    android:id="@+id/tvAppCacheScanStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/app_cache_scanning"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:visibility="gone" />
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

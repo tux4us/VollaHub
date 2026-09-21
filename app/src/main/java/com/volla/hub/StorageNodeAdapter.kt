@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.volla.hub.databinding.ItemStorageNodeBinding
 
 class StorageNodeAdapter(
-    private val onClick: (StorageNode) -> Unit
+    private val onClick: (StorageNode) -> Unit,
+    private val onLongClick: (StorageNode) -> Unit
 ) : RecyclerView.Adapter<StorageNodeAdapter.ViewHolder>() {
 
     private var nodes: List<StorageNode> = emptyList()
@@ -40,6 +41,10 @@ class StorageNodeAdapter(
         holder.binding.tvNodeCategory.text = holder.binding.root.context.getString(node.category.displayNameRes)
         holder.binding.root.setOnClickListener {
             if (node.isDirectory) onClick(node)
+        }
+        holder.binding.root.setOnLongClickListener {
+            onLongClick(node)
+            true
         }
         holder.binding.ivFolderIcon.visibility =
             if (node.isDirectory) android.view.View.VISIBLE else android.view.View.GONE
