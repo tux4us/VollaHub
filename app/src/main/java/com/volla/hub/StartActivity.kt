@@ -7,7 +7,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.volla.hub.databinding.ActivityStartBinding
+import com.volla.hub.databinding.DialogSocialMediaBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -104,33 +107,31 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun showSocialMediaDialog() {
-        val platforms = arrayOf(
-            getString(R.string.social_telegram),
-            getString(R.string.social_x),
-            getString(R.string.social_facebook),
-            getString(R.string.social_instagram),
-            getString(R.string.social_mastodon)
-        )
-        val urls = arrayOf(
-            "https://t.me/hello_volla",
-            "https://x.com/hello_volla",
-            "https://www.facebook.com/hellovolla",
-            "https://www.instagram.com/hello_volla",
-            "https://mastodon.social/@volla"
+        val platforms = listOf(
+            SocialPlatform(getString(R.string.social_telegram), "https://t.me/hello_volla", R.drawable.ic_social_telegram),
+            SocialPlatform(getString(R.string.social_x), "https://x.com/hello_volla", R.drawable.ic_social_x),
+            SocialPlatform(getString(R.string.social_facebook), "https://www.facebook.com/hellovolla", R.drawable.ic_social_facebook),
+            SocialPlatform(getString(R.string.social_instagram), "https://www.instagram.com/hello_volla", R.drawable.ic_social_instagram),
+            SocialPlatform(getString(R.string.social_mastodon), "https://mastodon.social/@volla", R.drawable.ic_social_mastodon),
         )
 
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.nav_social)
-            .setItems(platforms) { _, which ->
-                val url = urls[which]
-                try {
-                    val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    openUrl(url, platforms[which])
-                }
+        val dialogBinding = DialogSocialMediaBinding.inflate(layoutInflater)
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogBinding.root)
+            .create()
+
+        dialogBinding.socialRecyclerView.layoutManager = LinearLayoutManager(this)
+        dialogBinding.socialRecyclerView.adapter = SocialPlatformAdapter(platforms) { platform ->
+            dialog.dismiss()
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(platform.url))
+                startActivity(intent)
+            } catch (e: Exception) {
+                openUrl(platform.url, platform.name)
             }
-            .show()
+        }
+
+        dialog.show()
     }
 
     private fun loadLatestBlog() {
