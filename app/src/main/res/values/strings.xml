@@ -291,6 +291,10 @@
     <string name="app_cache_permission_title">Nutzungszugriff erforderlich</string>
     <string name="app_cache_permission_desc">Um die Cache-Größe installierter Apps anzuzeigen, benötigt VollaHub den Zugriff auf Nutzungsdaten. Es werden keine Nutzungszeiten oder Inhalte ausgelesen – nur Speichergrößen.</string>
     <string name="btn_grant_usage_access">Zugriff erteilen</string>
+    <string name="dialog_restricted_settings_title">Hinweis vor der Freigabe</string>
+    <string name="dialog_restricted_settings_message">Wenn VollaHub nicht über den Play Store, sondern als APK-Datei installiert wurde (z.B. von GitHub), blockiert Android aus Sicherheitsgründen zunächst den Umschalter für den Nutzungszugriff („Zugriff verweigert“).\n\nFalls das passiert:\n\n1. Öffne Einstellungen → Apps → VollaHub\n2. Tippe oben rechts auf die drei Punkte (⋮)\n3. Wähle „Uneingeschränkter Zugriff erlauben“ bzw. „Restricted settings“ aufheben\n4. Kehre hierher zurück und tippe erneut auf „Zugriff erteilen“</string>
+    <string name="btn_continue_to_settings">Weiter zu den Einstellungen</string>
+    <string name="btn_open_app_info">App-Info öffnen</string>
     <string name="app_cache_scanning">Ermittle Cache-Größen…</string>
     <string name="app_cache_total_summary">Gesamter App-Cache: %s auf %d Apps verteilt</string>
     <string name="app_cache_empty">Keine Apps mit nennenswertem Cache gefunden.</string>

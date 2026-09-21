@@ -131,7 +131,49 @@ class StorageAnalysisActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Zeigt vor dem Sprung in die Systemeinstellungen einen erklärenden Hinweis,
+     * falls die App per Sideload (z.B. APK von GitHub statt aus dem Play Store)
+     * installiert wurde. Ab Android 13 blockiert das System dann per "Restricted
+     * Settings" zunächst den Umschalter für sensible Berechtigungen wie den
+     * Nutzungsdatenzugriff und zeigt stattdessen "Zugriff verweigert" – das ist
+     * kein Fehler dieser App, sondern ein bewusster Sicherheitsmechanismus, der
+     * sich nur manuell über die App-Info-Seite aufheben lässt.
+     */
     private fun requestUsageAccessPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isInstalledFromTrustedInstaller()) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.dialog_restricted_settings_title)
+                .setMessage(R.string.dialog_restricted_settings_message)
+                .setNegativeButton(R.string.btn_open_app_info) { _, _ -> openAppInfoSettings(packageName) }
+                .setPositiveButton(R.string.btn_continue_to_settings) { _, _ -> openUsageAccessSettings() }
+                .show()
+        } else {
+            openUsageAccessSettings()
+        }
+    }
+
+    /**
+     * Prüft, ob die App über einen vertrauenswürdigen Installer (Play Store)
+     * installiert wurde. Bei null/unbekanntem Installer (Sideload per APK,
+     * Dateimanager, Browser-Download etc.) ist die Restricted-Settings-Sperre
+     * wahrscheinlich, daher wird dann der erklärende Hinweis-Dialog gezeigt.
+     */
+    private fun isInstalledFromTrustedInstaller(): Boolean {
+        val installerPackage = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                packageManager.getInstallSourceInfo(packageName).installingPackageName
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getInstallerPackageName(packageName)
+            }
+        } catch (e: Exception) {
+            null
+        }
+        return installerPackage == "com.android.vending"
+    }
+
+    private fun openUsageAccessSettings() {
         try {
             val intent = Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
                 data = Uri.parse("package:$packageName")

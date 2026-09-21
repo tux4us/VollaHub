@@ -292,6 +292,10 @@
     <string name="app_cache_permission_title">Usage access required</string>
     <string name="app_cache_permission_desc">To show the cache size of installed apps, VollaHub needs access to usage data. No usage times or content are read – only storage sizes.</string>
     <string name="btn_grant_usage_access">Grant Access</string>
+    <string name="dialog_restricted_settings_title">Before you continue</string>
+    <string name="dialog_restricted_settings_message">If VollaHub was installed as an APK file (e.g. from GitHub) instead of through the Play Store, Android may initially block the usage-access toggle for security reasons (\"Access denied\").\n\nIf that happens:\n\n1. Open Settings → Apps → VollaHub\n2. Tap the three dots (⋮) in the top right\n3. Choose \"Allow restricted settings\"\n4. Come back here and tap \"Grant Access\" again</string>
+    <string name="btn_continue_to_settings">Continue to settings</string>
+    <string name="btn_open_app_info">Open app info</string>
     <string name="app_cache_scanning">Determining cache sizes…</string>
     <string name="app_cache_total_summary">Total app cache: %s across %d apps</string>
     <string name="app_cache_empty">No apps with a significant cache were found.</string>
