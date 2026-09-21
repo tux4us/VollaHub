@@ -15,7 +15,7 @@ data class ContentItem(
 
 class VollaParser {
     private val baseUrl = "https://volla.online"
-    private val wikiBaseUrl = "http://wiki.volla.online"
+    private val wikiBaseUrl = "https://wiki.volla.online"
 
     suspend fun parseOnlinePages(lang: String = "de"): List<ContentItem> {
         val pages = mutableListOf<ContentItem>()
@@ -136,28 +136,24 @@ class VollaParser {
         val searchQuery = keywords.joinToString(" ")
         
         val results = mutableListOf<Pair<ContentItem, Int>>()
-        try {
-            val url = "$wikiBaseUrl/index.php?search=${URLEncoder.encode(searchQuery, "UTF-8")}&title=Spezial:Suche&fulltext=1"
-            val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
+        val url = "$wikiBaseUrl/index.php?search=${URLEncoder.encode(searchQuery, "UTF-8")}&title=Spezial:Suche&fulltext=1"
+        val doc = Jsoup.connect(url).userAgent("Mozilla/5.0").timeout(10000).get()
+        
+        val searchResults = doc.select(".mw-search-result")
+        for (result in searchResults) {
+            val link = result.select("a").first()
+            val title = link?.text() ?: ""
+            val href = link?.attr("abs:href") ?: ""
             
-            val searchResults = doc.select(".mw-search-result")
-            for (result in searchResults) {
-                val link = result.select("a").first()
-                val title = link?.text() ?: ""
-                val href = link?.attr("abs:href") ?: ""
-                
-                if (href.isEmpty() || title.isEmpty() || title.startsWith("Spezial:") || title.startsWith("Datei:")) continue
-                
-                // Sprachfilter für Wiki
-                if (lang == "de" && (href.contains("/en/") || title.contains("(en)", ignoreCase = true) || title.startsWith("En/"))) continue
+            if (href.isEmpty() || title.isEmpty() || title.startsWith("Spezial:") || title.startsWith("Datei:")) continue
+            
+            // Sprachfilter für Wiki
+            if (lang == "de" && (href.contains("/en/") || title.contains("(en)", ignoreCase = true) || title.startsWith("En/"))) continue
 
-                val excerpt = result.select(".searchresult").text()
-                val score = calculateScore(title, excerpt, keywords)
-                
-                if (score > 0) results.add(ContentItem(title, href, excerpt) to score)
-            }
-        } catch (e: Exception) {
-            Log.e("VollaParser", "Wiki Search Error: ${e.message}")
+            val excerpt = result.select(".searchresult").text()
+            val score = calculateScore(title, excerpt, keywords)
+            
+            if (score > 0) results.add(ContentItem(title, href, excerpt) to score)
         }
         return results
     }

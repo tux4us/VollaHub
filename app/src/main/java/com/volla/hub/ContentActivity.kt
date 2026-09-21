@@ -8,9 +8,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.volla.hub.databinding.ActivityContentBinding
 
@@ -18,6 +20,7 @@ class ContentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -60,9 +63,9 @@ class ContentActivity : AppCompatActivity() {
             setSupportZoom(true)
 
             // Optimale Mobile-Einstellungen
-            useWideViewPort = false  // Wichtig: false für Wiki
-            loadWithOverviewMode = false  // Wichtig: false
-            layoutAlgorithm = android.webkit.WebSettings.LayoutAlgorithm.NORMAL
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
 
             // Bessere Schriftgrößen
             textZoom = 100
@@ -96,38 +99,39 @@ class ContentActivity : AppCompatActivity() {
                         // CSS für volle Breite
                         var style = document.createElement('style');
                         style.innerHTML = `
-                            body { 
-                                font-size: 16px !important; 
-                                line-height: 1.6 !important;
-                                padding: 8px !important;
-                                margin: 0 !important;
-                                max-width: 100% !important;
-                                width: 100% !important;
+                            * { 
+                                box-sizing: border-box !important; 
                             }
-                            #content, #mw-content-text, .mw-parser-output {
-                                max-width: 100% !important;
-                                width: 100% !important;
+                            html, body { 
                                 margin: 0 !important;
-                                padding: 8px !important;
+                                padding: 0 !important;
+                                width: 100% !important;
+                                max-width: 100% !important;
+                                overflow-x: hidden !important;
+                            }
+                            #content {
+                                margin: 0 !important;
+                                padding: 12px !important;
+                                width: 100% !important;
+                                max-width: 100% !important;
+                                display: block !important;
+                            }
+                            #mw-navigation, #mw-head, #mw-panel, #footer, .mw-jump-link {
+                                display: none !important; 
                             }
                             img { 
                                 max-width: 100% !important; 
                                 height: auto !important; 
                             }
                             table { 
+                                display: block !important;
                                 width: 100% !important; 
-                                font-size: 14px !important;
+                                overflow-x: auto !important;
                             }
                             pre, code { 
-                                font-size: 13px !important; 
+                                white-space: pre-wrap !important;
+                                word-wrap: break-word !important;
                                 overflow-x: auto !important;
-                                max-width: 100% !important;
-                            }
-                            #mw-navigation, .mw-jump-link, #mw-head {
-                                display: none !important; 
-                            }
-                            #mw-page-base, #mw-head-base {
-                                display: none !important;
                             }
                         `;
                         document.head.appendChild(style);
