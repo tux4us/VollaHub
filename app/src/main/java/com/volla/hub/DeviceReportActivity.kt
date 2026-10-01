@@ -4,9 +4,13 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.pdf.PdfDocument
+import android.media.ExifInterface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -271,6 +275,10 @@ class DeviceReportActivity : AppCompatActivity() {
             sb.toString()
         } else ""
 
+        val imagesText = if (selectedImages.isNotEmpty()) {
+            getString(R.string.report_attached_images_count, selectedImages.size) + "\n"
+        } else ""
+
         return getString(R.string.report_title_header) + "\n" +
                 getString(R.string.report_created_with, version) + "\n\n" +
                 getString(R.string.report_field_title, title) + "\n\n" +
@@ -279,6 +287,7 @@ class DeviceReportActivity : AppCompatActivity() {
                 getString(R.string.report_shelter_active, if (binding.swShelter.isChecked) getString(R.string.yes) else getString(R.string.no)) + "\n" +
                 getString(R.string.report_security_mode_active, if (binding.swSecurityMode.isChecked) getString(R.string.yes) else getString(R.string.no)) + "\n" +
                 getString(R.string.report_vpn_active, if (binding.swVpn.isChecked) getString(R.string.yes) else getString(R.string.no)) + "\n" +
+                imagesText +
                 appsText +
                 getString(R.string.report_system_specs, specs)
     }
@@ -301,10 +310,12 @@ class DeviceReportActivity : AppCompatActivity() {
 
     private fun saveReportToStorage(): DeviceReport {
         val internalImagePaths = mutableListOf<String>()
+        val newSelectedImages = mutableListOf<Uri>()
         selectedImages.forEachIndexed { index, uri ->
             try {
                 if (uri.scheme == "file" && uri.path?.contains(filesDir.absolutePath) == true) {
                     internalImagePaths.add(uri.path!!)
+                    newSelectedImages.add(uri)
                 } else {
                     val inputStream = contentResolver.openInputStream(uri)
                     val file = File(filesDir, "report_img_${System.currentTimeMillis()}_$index.jpg")
@@ -313,9 +324,12 @@ class DeviceReportActivity : AppCompatActivity() {
                     inputStream?.close()
                     outputStream.close()
                     internalImagePaths.add(file.absolutePath)
+                    newSelectedImages.add(Uri.fromFile(file))
                 }
             } catch (e: Exception) { e.printStackTrace() }
         }
+        selectedImages.clear()
+        selectedImages.addAll(newSelectedImages)
 
         val report = DeviceReport(
             id = currentReportId ?: UUID.randomUUID().toString(),
@@ -392,17 +406,29 @@ class DeviceReportActivity : AppCompatActivity() {
         pdfDocument.finishPage(page)
 
         // --- BILDER ---
-        report.imagePaths.forEach { path ->
-            val bitmap = android.graphics.BitmapFactory.decodeFile(path)
+        val totalImages = report.imagePaths.size
+        report.imagePaths.forEachIndexed { index, path ->
+            val bitmap = decodeSampledBitmapFromFile(path, 1200, 1600)
             if (bitmap != null) {
                 pageInfo = PdfDocument.PageInfo.Builder(595, 842, pdfDocument.pages.size + 1).create()
                 page = pdfDocument.startPage(pageInfo)
                 canvas = page.canvas
                 
-                val scale = Math.min(495f / bitmap.width, 700f / bitmap.height)
+                paint.textSize = 14f
+                paint.isFakeBoldText = true
+                val headerText = getString(R.string.report_pdf_image_title, index + 1, totalImages)
+                canvas.drawText(headerText, 50f, 50f, paint)
+
+                val maxW = 495f
+                val maxH = 700f
+                val scale = Math.min(maxW / bitmap.width, maxH / bitmap.height)
                 val dw = bitmap.width * scale
                 val dh = bitmap.height * scale
-                canvas.drawBitmap(bitmap, null, RectF(50f, 50f, 50f + dw, 50f + dh), null)
+
+                val dx = 50f + (maxW - dw) / 2f
+                val dy = 80f + (maxH - dh) / 2f
+
+                canvas.drawBitmap(bitmap, null, RectF(dx, dy, dx + dw, dy + dh), null)
                 
                 drawFooter(canvas)
                 pdfDocument.finishPage(page)
@@ -421,6 +447,74 @@ class DeviceReportActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.error_generic, e.message), Toast.LENGTH_SHORT).show()
         } finally {
             pdfDocument.close()
+        }
+    }
+
+    private fun decodeSampledBitmapFromFile(path: String, reqWidth: Int, reqHeight: Int): Bitmap? {
+        val file = File(path)
+        if (!file.exists()) return null
+
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeFile(path, options)
+
+        if (options.outWidth <= 0 || options.outHeight <= 0) return null
+
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
+        options.inJustDecodeBounds = false
+
+        val decodedBitmap = try {
+            BitmapFactory.decodeFile(path, options)
+        } catch (e: OutOfMemoryError) {
+            e.printStackTrace()
+            null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        } ?: return null
+
+        return rotateBitmapIfNeeded(path, decodedBitmap)
+    }
+
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
+    }
+
+    private fun rotateBitmapIfNeeded(path: String, bitmap: Bitmap): Bitmap {
+        return try {
+            val exif = ExifInterface(path)
+            val orientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+            val matrix = Matrix()
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+                else -> return bitmap
+            }
+            val rotated = Bitmap.createBitmap(
+                bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
+            )
+            if (rotated != bitmap) {
+                bitmap.recycle()
+            }
+            rotated
+        } catch (e: Exception) {
+            bitmap
         }
     }
 

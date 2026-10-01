@@ -4,4 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="volla_red">#730D0D</color>
     <color name="white_or_black_text">?android:attr/textColorPrimary</color>
+    <!-- Status-Farben der Netzwerk-Diagnose -->
+    <color name="diag_ok">#43A047</color>
+    <color name="diag_warn">#F9A825</color>
+    <color name="diag_error">#E53935</color>
 </resources>

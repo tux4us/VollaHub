@@ -96,6 +96,9 @@ class StartActivity : AppCompatActivity() {
         binding.btnNavStorageAnalysis.setOnClickListener {
             startActivity(Intent(this, StorageAnalysisActivity::class.java))
         }
+        binding.btnNavNetworkDiagnostic.setOnClickListener {
+            startActivity(Intent(this, NetworkDiagnosticActivity::class.java))
+        }
     }
 
     private fun openUrl(url: String, title: String) {
