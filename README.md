@@ -17,6 +17,8 @@ Volla Hub ist eine umfassende Android-App, die Zugriff auf alle wichtigen Volla-
 - 📚 **Volla Wiki** - Mehrsprachiges Wiki (DE, EN, ES, IT, CS, DA, NO, SV)
 - 💬 **Volla Forum** - Direktzugriff auf Unterforen in verschiedenen Sprachen
 - 🔍 **Geräte-Report** - Hardware/Software Spezifikationen auslesen und als PDF exportieren
+- 🛠️ **Hardware-Selbsttest** - Geführte und automatische Tests der Gerätehardware
+- 📶 **Netzwerk-Diagnose** - Verbindung, DNS und Erreichbarkeit der Volla-Server prüfen
 - 📱 **Social Media** - Direkte Verknüpfung zur Volla Community (Telegram, Mastodon, etc.)
 - 💾 **Speicherbelegung** - Analysetool für die Speicherbelegung
 
@@ -28,13 +30,16 @@ Volla Hub ist eine umfassende Android-App, die Zugriff auf alle wichtigen Volla-
 - 🔔 **Blog Notifications** - Hintergrundprüfung auf neue Blogartikel via WorkManager
 - 📄 **PDF Export** - Erstellung von Support-Berichten inkl. Notizen und Foto-Anhängen
 - 📋 **Spec Copy** - Schnelles Kopieren von Geräte-Informationen in die Zwischenablage
+- 🛠️ **Hardware-Selbsttest** - 12 Tests (Touchscreen, Display, Lautsprecher, Mikrofon, Sensoren, Akku, GPS u. a.) mit Übernahme der Ergebnisse in den Geräte-Report
+- 📶 **Netzwerk-Diagnose** - WLAN-/Mobilfunk-Details sowie DNS-, TCP- und HTTPS-Tests mit Hinweisen zur Fehlerursache
 - 🔍 **Integrierte Suche** - Durchsuche alle Inhalte effizient
 - 🔄 **Pull-to-Refresh** - Aktualisiere Inhalte durch einfaches Herunterziehen
-- 🌍 **Mehrsprachig** - Wiki und Forum in bis zu 8 Sprachen verfügbar
+- 🌍 **Mehrsprachig** - Wiki und Forum in bis zu 8 Sprachen verfügbar, App-Oberfläche in Deutsch und Englisch
 
 ## 🖼️ Screenshots
 
-<img width="1080" height="2400" alt="Screenshot_20260612-231208_Volla Hub" src="https://github.com/user-attachments/assets/94aeefae-3cf8-42be-85e4-4392cdc0a12f" />
+<img width="1600" height="2560" alt="Screenshot_20261001-221900_Volla Hub" src="https://github.com/user-attachments/assets/a9863a3d-484d-435e-9ef6-f9b3667b8ce8" />
+
 
 
 ## 🛠️ Technologie-Stack
@@ -72,6 +77,12 @@ app/src/main/
 │   ├── MainActivity.kt          # Listenansichten für Online/Blog/Wiki/Forum
 │   ├── ChatBotActivity.kt       # Support-Assistent Chat Interface
 │   ├── DeviceReportActivity.kt  # System-Specs & PDF Export
+│   ├── HardwareTestActivity.kt  # Hardware-Selbsttest (Oberfläche und Ablauf)
+│   ├── HardwareTester.kt        # Testlogik: Sensoren, Akku, Audio, Vibration, GPS
+│   ├── HardwareTestModel.kt     # Testliste, Status und lokale Ergebnisspeicherung
+│   ├── TouchGridView.kt         # Vollbild-Raster für den Touchscreen-Test
+│   ├── NetworkDiagnosticActivity.kt # Netzwerk-Diagnose (Oberfläche)
+│   ├── NetworkDiagnostics.kt    # Netzwerk-Diagnose (Verbindung, DNS, TCP, HTTPS)
 │   ├── ContentActivity.kt       # Optimierter Web-Viewer
 │   ├── VollaParser.kt           # Jsoup Parser Logik für alle Quellen
 │   ├── BlogNotificationWorker.kt # Hintergrund-Check für News
@@ -100,8 +111,53 @@ app/src/main/
 ### Geräte-Report
 - Liest Hersteller, Modell, Hardware, Android-Version und Build-Fingerprint aus.
 - Erlaubt das Hinzufügen von Notizen und Galerie-Fotos für Support-Anfragen.
+- Übernimmt vorhandene Ergebnisse des Hardware-Selbsttests als eigenen Abschnitt `HARDWARE-SELBSTTEST` in Text- und PDF-Bericht.
 - Exportiert einen formatierten PDF-Bericht nach `/Documents/Volla/`.
 - Optimierte Share-Funktion für Telegram/E-Mail (Auto-Caption Support).
+
+### Hardware-Selbsttest
+Der Selbsttest prüft die Gerätehardware und eignet sich zur Eingrenzung von Fehlern vor einer Support-Anfrage.
+
+**Automatische Tests**
+- **Funkmodule und Ausstattung:** WLAN, Bluetooth, Bluetooth LE, NFC, GPS, Mobilfunk, Fingerabdrucksensor, USB-Host, Kameras und Blitz (vorhanden / ein- bzw. ausgeschaltet).
+- **Sensoren:** Beschleunigungssensor, Gyroskop, Magnetometer, Annäherungs-, Licht- und Drucksensor. Geprüft wird, ob vorhandene Sensoren tatsächlich Messwerte liefern.
+- **Akku:** Ladestand, Zustand, Temperatur, Spannung, Ladezustand, Anschlussart und (ab Android 14) Ladezyklen.
+
+**Tests mit Nutzerinteraktion**
+- **Touchscreen:** Vollbild-Raster; erkennt nicht reagierende Bereiche und zählt Multitouch-Punkte.
+- **Display-Farben:** Rot, Grün, Blau, Weiß und Schwarz zur Erkennung defekter Pixel und Verfärbungen.
+- **Lautsprecher:** Testton über den Medienkanal.
+- **Mikrofon:** Pegelmessung über drei Sekunden.
+- **Vibration:** Zwei Vibrationsimpulse.
+- **Lautstärketasten:** Erkennung beider Tasten, mit Möglichkeit, eine Taste als defekt zu melden.
+- **Kamera:** Auflistung aller Kameras (Ausrichtung, Auflösung, Blitz) und Testfoto über die System-Kamera-App.
+- **Ladeanschluss:** Erkennung eines Ladekabels oder einer Ladematte innerhalb von 30 Sekunden.
+- **GPS-Fix:** Zeit bis zum ersten Fix, Genauigkeit und Satellitenanzahl (Zeitlimit 60 Sekunden, am besten im Freien).
+
+**Ergebnisse und Datenschutz**
+- Die Ergebnisse werden ausschließlich lokal gespeichert und können kopiert, geteilt oder zurückgesetzt werden.
+- Mikrofonaufnahmen werden nur im Arbeitsspeicher auf den Pegel ausgewertet und nicht gespeichert.
+- Vom GPS-Test werden keine Koordinaten übernommen, nur Zeit, Genauigkeit und Satellitenanzahl.
+- Das Testfoto der Kamera wird von der System-Kamera-App aufgenommen. Volla Hub deklariert die Berechtigung `CAMERA` nicht und speichert das Foto nicht.
+- Berechtigungen für Mikrofon (`RECORD_AUDIO`) und Standort (`ACCESS_FINE_LOCATION`) werden erst beim jeweiligen Test zur Laufzeit angefragt. `VIBRATE` ist eine normale Berechtigung ohne Abfrage.
+
+### Netzwerk-Diagnose
+Die Diagnose zeigt Verbindungsstatus und Konfiguration und prüft die Erreichbarkeit der Volla-Server.
+
+- **Verbindung:** Flugmodus, Verbindungsart (WLAN, Mobilfunk, Ethernet, Bluetooth, VPN), von Android bestätigter Internetzugang, Captive Portal, getaktete Verbindung, Datensparmodus und Bandbreite (Systemschätzung).
+- **Netzwerkkonfiguration:** Schnittstelle, IP-Protokolle (IPv4/IPv6), DNS-Server, Privater DNS, MTU und HTTP-Proxy.
+- **WLAN:** Signalstärke, Frequenzband, Verbindungsgeschwindigkeit und WLAN-Standard.
+- **Mobilfunk:** SIM-Status, Betreiber und Roaming. Mit der optionalen Berechtigung `READ_PHONE_STATE` zusätzlich Netztyp (2G/3G/4G/5G), Signalstärke und Status der mobilen Daten.
+- **Erreichbarkeit:** Für `volla.online`, `wiki.volla.online`, `forum.volla.online` und `f-droid.org` werden DNS-Auflösung, TCP-Verbindungsaufbau auf Port 443 (drei Messungen mit min/Ø/max und Verlust) sowie eine HTTPS-Abfrage (Statuscode, Protokoll, TLS-Version) durchgeführt.
+- **Hinweise:** Regelbasierte Textempfehlungen, z. B. bei Captive Portal, ausgefallenem DNS, TLS-Fehlern, ausgeschalteten mobilen Daten oder Verbindungsabbrüchen.
+- Das Ergebnis lässt sich als Klartext kopieren oder teilen (z. B. für Forum oder Telegram).
+
+**Hinweise zu Datenschutz und Grenzen**
+- Die Tests kontaktieren ausschließlich die oben genannten Hosts. Es werden keine Google-Dienste und keine zusätzlichen Bibliotheken verwendet.
+- SSID, BSSID und eigene IP-Adressen werden weder angezeigt noch geteilt; von den IP-Adressen wird nur die Protokollfamilie (IPv4/IPv6) ausgewertet.
+- Ein ICMP-Ping ist ohne Root nicht zuverlässig möglich. Die Latenz wird daher als Dauer des TCP-Verbindungsaufbaus gemessen.
+- Der VoLTE-/VoWiFi-Status ist für normale Apps nicht auslesbar und daher nicht Teil der Diagnose.
+- `READ_PHONE_STATE` wird nur auf Nutzeraktion zur Laufzeit angefragt; ohne die Berechtigung bleiben die übrigen Prüfungen nutzbar. Rufnummer und Gerätekennungen werden nicht gelesen.
 
 ### Volla Wiki & Forum
 - Vollständiger Zugriff auf das Wiki in 8 Sprachen.
