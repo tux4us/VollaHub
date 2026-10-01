@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- Nur für Netztyp/Signalstärke in der Netzwerk-Diagnose; wird erst auf Nutzeraktion zur Laufzeit angefragt. -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Hardware-Selbsttest: Vibration (normale Berechtigung); Mikrofon wird erst auf Nutzeraktion zur Laufzeit angefragt. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -95,6 +98,13 @@
             android:exported="false"
             android:label="Speicher-Analyse"
             android:parentActivityName="com.volla.hub.MainActivity" />
+
+        <activity
+            android:name="com.volla.hub.HardwareTestActivity"
+            android:exported="false"
+            android:label="@string/btn_hardware_test"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:parentActivityName="com.volla.hub.StartActivity" />
 
         <activity
             android:name="com.volla.hub.NetworkDiagnosticActivity"

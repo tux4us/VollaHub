@@ -256,6 +256,11 @@ class DeviceReportActivity : AppCompatActivity() {
             specs.append(getString(R.string.report_launcher_error)).append("\n")
         }
         
+        // Ergebnisse des Hardware-Selbsttests (falls vorhanden) als eigener Abschnitt
+        HardwareTestStore(this).formatReportBlock(this)?.let { block ->
+            specs.append("\n").append(block).append("\n")
+        }
+
         binding.tvDeviceSpecs.text = specs.toString()
     }
 

@@ -99,6 +99,9 @@ class StartActivity : AppCompatActivity() {
         binding.btnNavNetworkDiagnostic.setOnClickListener {
             startActivity(Intent(this, NetworkDiagnosticActivity::class.java))
         }
+        binding.btnNavHardwareTest.setOnClickListener {
+            startActivity(Intent(this, HardwareTestActivity::class.java))
+        }
     }
 
     private fun openUrl(url: String, title: String) {
